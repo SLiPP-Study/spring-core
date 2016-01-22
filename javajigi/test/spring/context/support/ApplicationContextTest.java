@@ -1,8 +1,8 @@
-package net.slipp.core;
+package spring.context.support;
 
 import static org.junit.Assert.*;
 
-import net.slipp.ApplicationContext;
+import spring.context.ApplicationContext;
 import net.slipp.bean.FirstBean;
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package net.slipp;
+package spring.beans.factory.config;
 
 import java.util.Optional;
 

@@ -1,6 +1,11 @@
-package net.slipp.core;
+package spring.context.support;
 
-import net.slipp.*;
+import spring.beans.factory.ConfigurableListableBeanFactory;
+import spring.beans.factory.config.BeanDefinition;
+import spring.beans.factory.support.BeanDefinitionReader;
+import spring.beans.factory.support.DefaultBeanDefinitionReader;
+import spring.beans.factory.support.DefaultBeanFactory;
+import spring.context.ApplicationContext;
 
 public class DefaultApplicationContext implements ApplicationContext {
     private ConfigurableListableBeanFactory beanFactory;

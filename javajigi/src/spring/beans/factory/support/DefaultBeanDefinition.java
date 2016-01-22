@@ -1,6 +1,6 @@
-package net.slipp.core;
+package spring.beans.factory.support;
 
-import net.slipp.BeanDefinition;
+import spring.beans.factory.config.BeanDefinition;
 
 import java.util.Optional;
 

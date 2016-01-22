@@ -1,10 +1,8 @@
-package net.slipp.core;
+package spring.beans.factory.support;
 
-import net.slipp.BeanDefinition;
-import net.slipp.BeanFactory;
-import net.slipp.ConfigurableListableBeanFactory;
+import spring.beans.factory.config.BeanDefinition;
+import spring.beans.factory.ConfigurableListableBeanFactory;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;

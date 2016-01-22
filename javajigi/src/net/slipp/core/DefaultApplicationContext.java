@@ -1,21 +1,27 @@
 package net.slipp.core;
 
-import net.slipp.ApplicationContext;
-import net.slipp.BeanDefinition;
-import net.slipp.BeanDefinitionReader;
-import net.slipp.BeanFactory;
+import net.slipp.*;
 
 public class DefaultApplicationContext implements ApplicationContext {
-    private BeanFactory beanFactory;
+    private ConfigurableListableBeanFactory beanFactory;
     private BeanDefinitionReader beanDefinitionReader;
 
     public DefaultApplicationContext(String location) {
         beanFactory = new DefaultBeanFactory();
         beanDefinitionReader = new DefaultBeanDefinitionReader(this);
         beanDefinitionReader.loadBeanDefinitions(location);
+        refresh();
     }
 
-    public BeanFactory getBeanFactory() {
+    private void refresh() {
+        finishBeanFactoryInitializer(beanFactory);
+    }
+
+    private void finishBeanFactoryInitializer(ConfigurableListableBeanFactory beanFactory) {
+        beanFactory.preInstantiateSinglonetons();
+    }
+
+    public ConfigurableListableBeanFactory getBeanFactory() {
         return beanFactory;
     }
 

@@ -12,9 +12,9 @@ public class DefaultBeanDefinitionReader implements BeanDefinitionReader {
 
     @Override
     public void loadBeanDefinitions(String location) {
-        // load location file => create bean name, BeanDefintion
-        beanDefinitionRegistry.registerBeanDefinition("bean1", new DefaultBeanDefinition("net.slipp.Bean1"));
-        beanDefinitionRegistry.registerBeanDefinition("bean2", new DefaultBeanDefinition("net.slipp.Bean2"));
-        beanDefinitionRegistry.registerBeanDefinition("bean3", new DefaultBeanDefinition("net.slipp.Bean3"));
+        // location에 해당하는 설정 파일을 읽은 BeanDefinition을 생성해 BeanDefinitionRegistry에 등록
+        beanDefinitionRegistry.registerBeanDefinition("firstBean", new DefaultBeanDefinition("net.slipp.bean.FirstBean"));
+        beanDefinitionRegistry.registerBeanDefinition("secondBean", new DefaultBeanDefinition("net.slipp.bean.SecondBean"));
+        beanDefinitionRegistry.registerBeanDefinition("thirdBean", new DefaultBeanDefinition("net.slipp.bean.ThirdBean"));
     }
 }

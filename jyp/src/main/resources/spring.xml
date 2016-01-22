@@ -10,6 +10,13 @@
 
     <context:component-scan base-package="jyp.spring.core"></context:component-scan>
 
-    <!--<bean id="vehicle" class="Bike"></bean>-->
+    <!--<bean id="vehicle" class="jyp.spring.core.Car">
+
+    </bean>
+
+    <bean id="tyre" class="jyp.spring.core.Tyre">
+        &lt;!&ndash;<property name="brand" value="MRF"></property>&ndash;&gt;
+        <constructor-arg value="MRF"></constructor-arg>
+    </bean>-->
 
 </beans>

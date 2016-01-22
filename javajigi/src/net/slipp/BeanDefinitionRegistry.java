@@ -1,5 +1,5 @@
 package net.slipp;
 
-interface BeanDefinitionRegistry {
+public interface BeanDefinitionRegistry {
     void registerBeanDefinition(String beanName, BeanDefinition beanDefinition);
 }

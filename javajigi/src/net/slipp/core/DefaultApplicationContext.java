@@ -11,7 +11,7 @@ public class DefaultApplicationContext implements ApplicationContext {
 
     public DefaultApplicationContext(String location) {
         beanFactory = new DefaultBeanFactory();
-        beanDefinitionReader = new DefaultBeanDefinitionReader(beanFactory);
+        beanDefinitionReader = new DefaultBeanDefinitionReader(this);
         beanDefinitionReader.loadBeanDefinitions(location);
     }
 

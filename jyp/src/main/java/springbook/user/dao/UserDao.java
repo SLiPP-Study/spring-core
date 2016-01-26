@@ -1,20 +1,19 @@
 package springbook.user.dao;
 
 import springbook.user.domain.User;
-import sun.tools.java.ClassNotFound;
 
 import java.sql.*;
 
 public class UserDao {
 
-    private SimpleConnectionMaker simpleConnectionMaker;
+    private ConnectionMaker connectionMaker;
 
     public UserDao() {
-        simpleConnectionMaker = new SimpleConnectionMaker();
+        connectionMaker = new DConnectionMaker();
     }
 
     public void add(User user) throws ClassNotFoundException, SQLException {
-        Connection c = simpleConnectionMaker.makeNewConnection();
+        Connection c = connectionMaker.makeNewConnection();
 
         PreparedStatement ps = c.prepareStatement("insert into users(id, name, password) values (?,?,?)");
         ps.setString(1, user.getId());
@@ -28,7 +27,7 @@ public class UserDao {
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException {
-        Connection c = simpleConnectionMaker.makeNewConnection();
+        Connection c = connectionMaker.makeNewConnection();
 
         PreparedStatement ps = c.prepareStatement("select * from users where id = ?");
         ps.setString(1, id);
@@ -52,7 +51,7 @@ public class UserDao {
         UserDao userDao = new UserDao();
 
         User user = new User();
-        user.setId("jyp2");
+        user.setId("jyp3");
         user.setName("jyp2");
         user.setPassword("kaka");
 

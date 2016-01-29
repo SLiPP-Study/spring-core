@@ -5,10 +5,10 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * @author jinyoung.park89
- * @date 2016. 1. 27.
+ * @date 2016. 1. 28.
  */
 @Configuration
-public class DaoFactory {
+public class CountingDaoFactory {
 
     @Bean
     public UserDao userDao() {
@@ -18,7 +18,7 @@ public class DaoFactory {
     }
 
     @Bean
-    public DConnectionMaker connectionMaker() {
-        return new DConnectionMaker();
+    public ConnectionMaker connectionMaker() {
+        return new CountingConnectionMaker(new DConnectionMaker());
     }
 }

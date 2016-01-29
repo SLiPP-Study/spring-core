@@ -19,4 +19,14 @@
         <constructor-arg value="MRF"></constructor-arg>
     </bean>-->
 
+    <bean id="realConnectionMaker" class="springbook.user.dao.DConnectionMaker" />
+
+    <bean id="countingConnectionMaker" class="springbook.user.dao.CountingConnectionMaker">
+        <property name="realConnectionMaker" ref="realConnectionMaker" />
+    </bean>
+
+    <bean id="userDao" class="springbook.user.dao.UserDao">
+        <property name="connectionMaker" ref="countingConnectionMaker"/>
+    </bean>
+
 </beans>

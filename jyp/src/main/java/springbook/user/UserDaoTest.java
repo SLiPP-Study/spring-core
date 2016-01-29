@@ -29,7 +29,10 @@ public class UserDaoTest {
         userDao.get("jyp3");
         System.out.println(jyp3);
 
-        /*CountingConnectionMaker ccm = context.getBean("countingConnectionMaker", CountingConnectionMaker.class);
+        CountingDataSource cds = context.getBean("countingDatasource", CountingDataSource.class);
+        System.out.println(cds.getCounter());
+
+        /*CountingDataSource ccm = context.getBean("countingConnectionMaker", CountingDataSource.class);
         System.out.println("connection count is " + ccm.getCounter());*/
     }
 }

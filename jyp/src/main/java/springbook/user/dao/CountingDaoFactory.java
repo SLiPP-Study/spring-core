@@ -18,17 +18,16 @@ public class CountingDaoFactory {
     @Bean
     public UserDao userDao() {
         UserDao userDao = new UserDao();
-        userDao.setDataSource(connectionMaker());
+        userDao.setDataSource(dataSource());
         return userDao;
     }
 
     @Bean
-    public DataSource dataSource() {
+    public DataSource dataSource(DataSource dataSource) {
 
+        DataSource countingConnectionMaker = new CountingDataSource();
+        countingConnectionMaker.setRealDatasource(dataSource);
 
-
-        CountingConnectionMaker countingConnectionMaker = new CountingConnectionMaker();
-        countingConnectionMaker.setRealConnectionMaker(new DConnectionMaker());
         return countingConnectionMaker;
     }
 }

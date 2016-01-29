@@ -10,20 +10,9 @@
 
     <context:component-scan base-package="jyp.spring.core"></context:component-scan>
 
-    <!--<bean id="vehicle" class="jyp.spring.core.Car">
-
+    <bean id="countingDatasource" class="springbook.user.dao.CountingDataSource">
+        <property name="realDatasource" ref="dataSource" />
     </bean>
-
-    <bean id="tyre" class="jyp.spring.core.Tyre">
-        &lt;!&ndash;<property name="brand" value="MRF"></property>&ndash;&gt;
-        <constructor-arg value="MRF"></constructor-arg>
-    </bean>-->
-
-    <!--<bean id="realConnectionMaker" class="springbook.user.dao.DConnectionMaker" />
-
-    <bean id="countingConnectionMaker" class="springbook.user.dao.CountingConnectionMaker">
-        <property name="realConnectionMaker" ref="realConnectionMaker" />
-    </bean>-->
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
         <property name="driverClass" value="com.mysql.jdbc.Driver"/>
@@ -33,7 +22,7 @@
     </bean>
 
     <bean id="userDao" class="springbook.user.dao.UserDao">
-        <property name="dataSource" ref="dataSource"/>
+        <property name="dataSource" ref="countingDatasource"/>
     </bean>
 
 </beans>

@@ -23,5 +23,4 @@ public class AccountService {
         System.out.println(user + "님이 회원가입 하셨습니다.");
         emailSender.sender(user + "회원가입 완료");
     }
-
 }

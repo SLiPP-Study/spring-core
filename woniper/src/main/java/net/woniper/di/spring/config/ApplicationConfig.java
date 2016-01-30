@@ -4,12 +4,14 @@ import net.woniper.di.common.AccountService;
 import net.woniper.di.common.GmailSenderImpl;
 import net.woniper.di.common.MailSenderImpl;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
  * Created by woniper on 2016. 1. 23..
  */
 @Configuration
+@ComponentScan(basePackages = "net.woniper.di.spring.component")
 public class ApplicationConfig {
 
     @Bean(name = "gmail")

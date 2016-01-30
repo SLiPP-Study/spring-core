@@ -17,7 +17,7 @@ public class JavaDI {
          * JavaDI 클래스가 주입하는 주체가 되기 때문에 JavaDI와 의존가 생긴다.
          */
         AccountService mailAccount = new AccountService();
-        // wmpAccount = new AccountService(new WMPMailSenderImpl());
+        // mailAccount = new AccountService(new MailSenderImpl());
         mailAccount.setEmailSender(new MailSenderImpl());
         mailAccount.newAccount("woniper");
     }

@@ -15,7 +15,7 @@ public class SpringDI {
         AccountService gmailAccount = context.getBean("gmail", AccountService.class);
         gmailAccount.newAccount("woniper");
 
-        AccountService wmpMailAccount = context.getBean("wmpMail", AccountService.class);
+        AccountService wmpMailAccount = context.getBean("mail", AccountService.class);
         wmpMailAccount.newAccount("woniper");
     }
 }

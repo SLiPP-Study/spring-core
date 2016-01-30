@@ -2,7 +2,7 @@ package net.woniper.di.spring.config;
 
 import net.woniper.di.common.AccountService;
 import net.woniper.di.common.GmailSenderImpl;
-import net.woniper.di.common.WMPMailSenderImpl;
+import net.woniper.di.common.MailSenderImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,9 +17,9 @@ public class ApplicationConfig {
         return new AccountService(new GmailSenderImpl());
     }
 
-    @Bean(name = "wmpMail")
-    public AccountService wmpMailAccount() {
-        return new AccountService(new WMPMailSenderImpl());
+    @Bean(name = "mail")
+    public AccountService mailAccount() {
+        return new AccountService(new MailSenderImpl());
     }
 
 }

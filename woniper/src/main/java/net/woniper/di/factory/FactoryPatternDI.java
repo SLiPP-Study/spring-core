@@ -2,7 +2,7 @@ package net.woniper.di.factory;
 
 import net.woniper.di.common.AccountService;
 import net.woniper.di.common.GmailSenderImpl;
-import net.woniper.di.common.WMPMailSenderImpl;
+import net.woniper.di.common.MailSenderImpl;
 import net.woniper.di.factory.type.MailType;
 
 /**
@@ -26,8 +26,8 @@ public class FactoryPatternDI {
             case GMAIL:
                 return new AccountService(new GmailSenderImpl());
 
-            case WMPMAIL:
-                return new AccountService(new WMPMailSenderImpl());
+            case MAIL:
+                return new AccountService(new MailSenderImpl());
 
             default:
                 throw new RuntimeException();

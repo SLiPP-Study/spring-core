@@ -20,6 +20,6 @@ public class SpringDI {
         mailAccount.newAccount("woniper");
 
         AccountComponent component = context.getBean(AccountComponent.class);
-        component.newAccount();
+        component.newAccount("woniper");
     }
 }

@@ -15,5 +15,8 @@ public class Main {
          */
         AccountService gmailAccount = FactoryPatternDI.getInstance().create(MailType.GMAIL);
         gmailAccount.newAccount("woniper");
+
+        AccountService mailAccount = FactoryPatternDI2.getInstance().create(MailType.MAIL);
+        mailAccount.newAccount("woniper");
     }
 }

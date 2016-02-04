@@ -18,5 +18,8 @@ public class Main {
 
         AccountService mailAccount = FactoryPatternDI2.getInstance().create(MailType.MAIL);
         mailAccount.newAccount("woniper");
+
+        AccountService initAccountService = FactoryPatternDI3.getInstance().create(MailType.MAIL);
+        initAccountService.newAccount("woniper");
     }
 }

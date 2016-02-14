@@ -3,7 +3,7 @@ package net.woniper.di.common;
 /**
  * Created by woniper on 2016. 1. 23..
  */
-public class AccountService implements Initializing {
+public class AccountService implements Initializing, StringAware {
 
     private EmailSender emailSender;
 
@@ -27,5 +27,10 @@ public class AccountService implements Initializing {
     @Override
     public void afterInitializing() {
         System.out.println("초기화 메소드");
+    }
+
+    @Override
+    public void setString(String txt) {
+        System.out.println(txt);
     }
 }

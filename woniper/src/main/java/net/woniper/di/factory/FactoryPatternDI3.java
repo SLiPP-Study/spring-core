@@ -1,9 +1,6 @@
 package net.woniper.di.factory;
 
-import net.woniper.di.common.AccountService;
-import net.woniper.di.common.GmailSenderImpl;
-import net.woniper.di.common.Initializing;
-import net.woniper.di.common.MailSenderImpl;
+import net.woniper.di.common.*;
 import net.woniper.di.factory.type.MailType;
 
 import java.util.HashMap;
@@ -24,6 +21,9 @@ public class FactoryPatternDI3 {
         emailSenderMap.forEach((type, account) -> {
             if(account instanceof Initializing)
                 ((Initializing)account).afterInitializing();
+
+            if(account instanceof StringAware)
+                ((StringAware)account).setString("이것은 StringAware 입니다.");
         });
     }
 

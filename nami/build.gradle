@@ -8,8 +8,9 @@ repositories {
 }
 
 dependencies {
-    compile 'org.springframework:spring-context:4.2.4.RELEASE'
+//    compile 'org.springframework:spring-context:4.2.4.RELEASE'
     compile 'org.springframework:spring-web:4.2.4.RELEASE'
+    compile 'org.springframework:spring-webmvc:4.2.4.RELEASE'
     compile 'javax.servlet:javax.servlet-api:3.1.0'
 
     testCompile 'junit:junit:4.12'

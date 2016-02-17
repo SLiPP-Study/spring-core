@@ -23,7 +23,7 @@ public class ApplicationContextAwareProcessor implements BeanPostProcessor {
     }
 
     @Override
-    public Object postProcessorBeforeInitialization(Object bean, String name) throws BeansException {
+    public Object postProcessBeforeInitialization(Object bean, String name) throws BeansException {
         if (bean instanceof ResourceLoaderAware) {
             if (logger.isDebugEnabled()) {
                 logger.debug("Invoking setResourceLoader on ResourceLoaderAware bean '" + name + "'");

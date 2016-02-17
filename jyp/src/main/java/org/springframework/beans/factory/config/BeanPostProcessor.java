@@ -8,7 +8,7 @@ import org.springframework.beans.BeansException;
  */
 public interface BeanPostProcessor {
 
-    Object postProcessorBeforeInitialization(Object bean, String name) throws BeansException;
+    Object postProcessBeforeInitialization(Object bean, String name) throws BeansException;
 
     Object postProcessAfterInitialization(Object bean, String name) throws BeansException;
 }

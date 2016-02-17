@@ -16,7 +16,7 @@ public interface ListableBeanFactory extends BeanFactory {
 
     String[] getBeanDefinitionNames(Class Type);
 
-    boolean containBeanDefinition(String name);
+    boolean containsBeanDefinition(String name);
 
     Map getBeansOfType(Class type, boolean includePropertyTypes, boolean includeFactoryBeans) throws BeansException;
 }

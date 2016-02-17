@@ -3,6 +3,7 @@ package springbook.user;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import springbook.user.dao.*;
+import springbook.user.domain.User;
 
 import java.sql.SQLException;
 
@@ -16,8 +17,18 @@ public class UserDaoTest {
 
         ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
         UserDao userDao = (UserDao) context.getBean("userDao", UserDao.class);
-
-
         System.out.println(userDao);
+
+        /*User user = new User();
+        user.setName("jyp kaka");
+        user.setId("jypID");
+        user.setPassword("secret pw");
+
+        userDao.add(user);
+
+
+        User jypID = userDao.get("jypID");
+        System.out.println(jypID);*/
+
     }
 }

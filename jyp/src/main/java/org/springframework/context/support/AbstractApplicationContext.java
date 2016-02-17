@@ -223,9 +223,8 @@ implements ConfigurableApplicationContext {
         return getBeanFactory().getBeanDefinitionNames(type);
     }
 
-    @Override
-    public boolean containBeanDefinition(String name) {
-        return getBeanFactory().containBeanDefinition(name);
+    public boolean containsBeanDefinition(String name) {
+        return getBeanFactory().containsBeanDefinition(name);
     }
 
     @Override
@@ -249,7 +248,7 @@ implements ConfigurableApplicationContext {
     }
 
     @Override
-    public String getMessage(String code, Object[] args, Locale locale) throws NoSuchMethodException {
+    public String getMessage(String code, Object[] args, Locale locale) throws NoSuchMessageException {
         return this.messageSource.getMessage(code, args, locale);
     }
 

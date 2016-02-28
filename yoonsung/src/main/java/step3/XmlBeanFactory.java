@@ -5,7 +5,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -97,13 +96,9 @@ public class XmlBeanFactory {
         if (id == null || "".equals(id))
             throw new IllegalArgumentException("Bean without id attribute");
 
-        //TODO 적절한 메서드를 호출해서 null이 아닌 값으로 할당한다.
-        PropertyValues propertyValues = null;
-
-        //TODO 적절한 메서드를 호출해서 null이 아닌 값으로 할당한다.
-        BeanDefinition beanDefinition = null;
-
-        ////TODO 적절한 메서드 호출. BeanDefinition을 등록하도록 한다.
+        PropertyValues propertyValues = createPropertyValues(element);
+        BeanDefinition beanDefinition = createBeanDefinition(element, id, propertyValues);
+        registerBeanDefinition(id, beanDefinition);
     }
 
     private PropertyValue createPropertyValue(Element propElement) {
@@ -124,9 +119,7 @@ public class XmlBeanFactory {
         NodeList nl = beanElement.getElementsByTagName(PROPERTY_ELEMENT);
         for (int i = 0 ; i < nl.getLength() ; i++) {
             Element propElement = (Element) nl.item(i);
-
-            //TODO 적절한 메서드를 호출해서 null이 아닌 값으로 할당한다.
-            PropertyValue propertyValue = null;
+            PropertyValue propertyValue = createPropertyValue(propElement);
             propertyValues.addPropertyValue(propertyValue);
         }
 
@@ -171,7 +164,7 @@ public class XmlBeanFactory {
             BeanDefinition beanDefinition = getBeanDefinition(key);
             PropertyValues propertyValues = beanDefinition.getPropertyValues();
             Object newlyCreatedBean = beanDefinition.getBeanClass().newInstance();
-            //TODO 적절한 메서드 호출. 생성된 newlyCreatedBean에 field를 설정할 수 있도록 한다.
+            applyPropertyValues(beanDefinition, propertyValues, newlyCreatedBean, key);
             return newlyCreatedBean;
         } catch (InstantiationException e) {
             e.printStackTrace();

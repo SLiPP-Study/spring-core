@@ -30,4 +30,8 @@ public class Step1Test {
         A reloadedA = beanFactory.getBean("A", A.class);
         assertEquals(reloadedA.name, "AA");
     }
+
+    /**
+     * 과제) 통과!
+     */
 }

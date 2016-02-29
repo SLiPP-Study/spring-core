@@ -1,33 +1,37 @@
 package step2;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PropertyValues {
 
-    private final ArrayList propertyValueList;
+    private final Map<String, PropertyValue> propertyValueMap;
 
     public PropertyValues() {
-        propertyValueList = new ArrayList(10);
+        propertyValueMap = new HashMap<>();
     }
 
     public void addPropertyValue(PropertyValue propertyValue) {
-        propertyValueList.add(propertyValue);
+        propertyValueMap.put(propertyValue.getName(), propertyValue);
     }
 
     public PropertyValue getPropertyValue(String propertyName) {
-        for (int i = 0; i < propertyValueList.size(); i++) {
-            PropertyValue pv = (PropertyValue) propertyValueList.get(i);
+        return propertyValueMap.get(propertyName);
+        /*for (int i = 0; i < propertyValueMap.size(); i++) {
+            PropertyValue pv = (PropertyValue) propertyValueMap.get(i);
             if (pv.getName().equals(propertyName))
                 return pv;
         }
-        return null;
+        return null;*/
     }
 
     public PropertyValue[] getPropertyValues() {
-        return (PropertyValue[]) propertyValueList.toArray(new PropertyValue[0]);
+        Collection<PropertyValue> values = propertyValueMap.values();
+        return values.toArray(new PropertyValue[values.size()]);
     }
 
     public int getCount() {
-        return propertyValueList.size();
+        return propertyValueMap.size();
     }
 }

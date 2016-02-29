@@ -55,7 +55,8 @@ public class XmlBeanFactory {
     }
 
     private void loadBeanDefinitions(String location) throws FileNotFoundException {
-        loadBeanDefinitions(new FileInputStream(location));
+        ClassLoader ccl = Thread.currentThread().getContextClassLoader();
+        loadBeanDefinitions(ccl.getResourceAsStream(location));
     }
 
     private void loadBeanDefinitions(InputStream inputStream) {
@@ -98,12 +99,13 @@ public class XmlBeanFactory {
             throw new IllegalArgumentException("Bean without id attribute");
 
         //TODO 적절한 메서드를 호출해서 null이 아닌 값으로 할당한다.
-        PropertyValues propertyValues = null;
+        PropertyValues propertyValues = createPropertyValues(element);
 
         //TODO 적절한 메서드를 호출해서 null이 아닌 값으로 할당한다.
-        BeanDefinition beanDefinition = null;
+        BeanDefinition beanDefinition = createBeanDefinition(element, id, propertyValues);
 
         ////TODO 적절한 메서드 호출. BeanDefinition을 등록하도록 한다.
+        registerBeanDefinition(id, beanDefinition);
     }
 
     private PropertyValue createPropertyValue(Element propElement) {
@@ -126,7 +128,7 @@ public class XmlBeanFactory {
             Element propElement = (Element) nl.item(i);
 
             //TODO 적절한 메서드를 호출해서 null이 아닌 값으로 할당한다.
-            PropertyValue propertyValue = null;
+            PropertyValue propertyValue = createPropertyValue(propElement);
             propertyValues.addPropertyValue(propertyValue);
         }
 
@@ -172,6 +174,7 @@ public class XmlBeanFactory {
             PropertyValues propertyValues = beanDefinition.getPropertyValues();
             Object newlyCreatedBean = beanDefinition.getBeanClass().newInstance();
             //TODO 적절한 메서드 호출. 생성된 newlyCreatedBean에 field를 설정할 수 있도록 한다.
+            applyPropertyValues(beanDefinition, propertyValues, newlyCreatedBean, key);
             return newlyCreatedBean;
         } catch (InstantiationException e) {
             e.printStackTrace();

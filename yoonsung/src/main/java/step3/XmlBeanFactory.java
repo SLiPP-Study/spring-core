@@ -18,7 +18,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-public class XmlBeanFactory {
+public class XmlBeanFactory extends AbstractBeanFactory {
 
     private static final String BEAN_ELEMENT = "bean";
     private static final String CLASS_ATTRIBUTE = "class";
@@ -27,19 +27,6 @@ public class XmlBeanFactory {
     private static final String NAME_ATTRIBUTE = "name";
     private static final String VALUE_ATTRIBUTE = "value";
 
-    /**
-     * Map of Bean objects, keyed by id attribute
-     */
-    private Map<String, BeanDefinition> beanDefinitionHash = new HashMap();
-    private Map beanHash = new HashMap();
-
-    public <T> T getBean(String key, Class<T> clazz) {
-        return (T) getBean(key);
-    }
-
-    public Object getBean(String key) {
-        return getBeanInternal(key);
-    }
 
     public XmlBeanFactory(String fileName) {
         try {
@@ -53,11 +40,12 @@ public class XmlBeanFactory {
         loadBeanDefinitions(inputStream);
     }
 
-    private void loadBeanDefinitions(String location) throws FileNotFoundException {
+    @Override
+    public void loadBeanDefinitions(String location) throws FileNotFoundException {
         loadBeanDefinitions(new FileInputStream(location));
     }
 
-    private void loadBeanDefinitions(InputStream inputStream) {
+    public void loadBeanDefinitions(InputStream inputStream) {
         if (inputStream == null)
             throw new IllegalArgumentException("InputStream cannot be null: expected an XML file");
 
@@ -130,81 +118,8 @@ public class XmlBeanFactory {
         if (!element.hasAttribute(CLASS_ATTRIBUTE))
             throw new IllegalArgumentException("Bean without class attribute");
         String classname = element.getAttribute(CLASS_ATTRIBUTE);
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        try {
-            return new BeanDefinition(Class.forName(classname, true, classLoader), propertyValues);
-        } catch (ClassNotFoundException e) {
-            throw new UnsupportedOperationException("Error creating bean with name [" + id + "]: class '" + classname + "' not found", e);
-        }
+        return createBeanDefinition(classname, propertyValues);
     }
 
-    private void registerBeanDefinition(String id, BeanDefinition beanDefinition) {
-        beanDefinitionHash.put(id, beanDefinition);
-    }
 
-    private BeanDefinition getBeanDefinition(String key) {
-        return beanDefinitionHash.get(key);
-    }
-
-    private Object getBeanInternal(String key) {
-        if (key == null)
-            throw new IllegalArgumentException("Bean name null is not allowed");
-
-        if (beanHash.containsKey(key)) {
-            return beanHash.get(key);
-        }
-
-        Object newlyCreatedBean = createBean(key);
-        beanHash.put(key, newlyCreatedBean);
-        return newlyCreatedBean;
-    }
-
-    private Object createBean(String key) {
-        try {
-            BeanDefinition beanDefinition = getBeanDefinition(key);
-            PropertyValues propertyValues = beanDefinition.getPropertyValues();
-            Object newlyCreatedBean = beanDefinition.getBeanClass().newInstance();
-            applyPropertyValues(beanDefinition, propertyValues, newlyCreatedBean, key);
-            return newlyCreatedBean;
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-            throw new IllegalArgumentException("Cannot instantiate [bean name : " + key+ "]; is it an interface or an abstract class?");
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            throw new IllegalArgumentException("Cannot instantiate [bean name : " + key + "]; has class definition changed? Is there a public constructor?");
-        }
-    }
-
-    private void applyPropertyValues(BeanDefinition beanDefinition, PropertyValues propertyValues, Object bean, String beanName) {
-        Class clazz = beanDefinition.getBeanClass();
-
-        PropertyValue[] array = propertyValues.getPropertyValues();
-        for (int i = 0 ; i < propertyValues.getCount() ; ++i) {
-            PropertyValue property = array[i];
-            try {
-                Field field = clazz.getDeclaredField(property.getName());
-                String propertyName = property.getName();
-
-                Method method = clazz.getMethod("set" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1), new Class[]{field.getType()});
-
-                //Integer와 String 필드에 대해서만 동작
-                if ("java.lang.Integer".equals(field.getType().getName())) {
-                    method.invoke(bean, Integer.parseInt(property.getValue().toString()));
-                } else {
-                    method.invoke(bean, property.getValue().toString());
-                }
-            } catch (NoSuchFieldException e) {
-                e.printStackTrace();
-                throw new IllegalArgumentException("Cannot instantiate [bean name : " + beanName + "]; is not have field [" + property.getName() + "]");
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-                throw new IllegalArgumentException("Cannot instantiate [bean name : " + beanName + "]; Cannot access field [" + property.getName() + "]");
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-                throw new IllegalArgumentException("Cannot instantiate [bean name : " + beanName + "]; Cannot access field, set method not defined [" + property.getName() + "]");
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }

@@ -72,4 +72,44 @@ public class Step3Test {
         assertEquals(reloadedB.name, "Java");
         assertEquals(reloadedB.age.intValue(), 22);
     }
+
+
+    /**
+     * 과제1)
+     * 1. 설정 정보 읽어들이기 (파일 or java code or xxx...)
+     * 2. 읽어들인 설정 정보를 토대로 BeanDefinition 설정 정보를 생성하는 기능
+     * 3. BeanDefinition 설정 정보 저장
+     * 4. 클라이언트 요청에 따라 bean 제공
+     * 총 네 가지 기능을 제공해야 한다고 생각했습니다.
+     *
+     *
+     *
+     *
+     * 과제2)
+     *
+     * ## beanHash, beanDefinitionHash 필드를 어디서 참조하고 있는가?
+     * =>
+     * bean을 생성, 조회하는 곳 (beanHash 참조)
+     * beanDefinition을 생성 조회하는 곳 (beanDefinitionHash 참조)
+     *
+     * ## 3, 4번의 기능을 AbstractBeanFactory로 추상화해보자.
+     * =>
+     * XmlBeanFactory 클래스는 xml 파일로 된 설정만 읽어들일 수 있습니다. annotation기반으로 된 설정 정보는 읽어들일 수 없습니다.
+     * 따라서 xml 파일을 읽어서 BeanDefinition 객체를 만드는 부분까지는 XmlBeanFactory 클래스에서 구현하도록 하고
+     * 나머지 부분은 AbstractBeanFactory 추상 클래스로 추출하였습니다.
+     * 만약 xml 이외의 정보를 기반으로 bean을 생성하는 beanFactory 클래스를 만들 경우
+     * AbstractBeanFactory 클래스를 상속 받아 BeanDefinition 객체를 만드는 부분을 구현하면 될 것입니다.
+     *
+     * ## AbstractBeanFactory를 추상클래스, 일반 클래스, 인터페이스 중 어떤방식으로 만드는게 좋을까?
+     * =>
+     * 추상 클래스가 적절하다고 생각합니다. BeanFactory 인터페이스에서 제공하는 기능 중 공통적으로 사용할 것들을 구현하고 나머지는
+     * AbstractBeanFactory 클래스를 구현하는 클래스에서 처리하도록 위임하는 방식입니다.
+     * 그리고 spring 코드를 분석해보면 이런 식으로 중간에 AbstractXXX 라는 식으로 중간 단계의 추상 클래스를 두는 경우가 많더군요.
+     * @link {https://github.com/spring-projects/spring-framework/blob/d5ee787e1e6653257720afe31ee3f8819cd4605c/spring-beans/src/main/java/org/springframework/beans/factory/config/AbstractFactoryBean.java}
+     * @link {https://github.com/spring-projects/spring-framework/blob/2defb6555ea1bb0db84a04836674ce9b2fdcad7f/spring-beans/src/main/java/org/springframework/beans/factory/support/AbstractBeanDefinition.java}
+     * @link {https://github.com/spring-projects/spring-framework/blob/f6ebc4ce977e49d800b5ea5332dd4b5934eb0706/spring-context/src/main/java/org/springframework/context/support/AbstractApplicationContext.java}
+     *
+     * ## 추상화 후 어떤 효과를 얻을 수 있을까?
+     * AbstractBeanFactory 클래스로 추상화함으로써 공통 기능에 대한 재사용성이 높아졌습니다.
+     */
 }

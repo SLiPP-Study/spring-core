@@ -43,10 +43,13 @@ public class XmlBeanFactory {
 
     public XmlBeanFactory(InputStream inputStream) {
         //TODO 적절한 메서드 호출
+        loadBeans(inputStream);
     }
 
     private void loadBeans(String location) throws FileNotFoundException {
         //TODO 적절한 메서드 호출
+        InputStream inputStream = ClassLoader.getSystemResourceAsStream(location);
+        loadBeans(inputStream);
     }
 
     private void loadBeans(InputStream inputStream) {
@@ -59,6 +62,8 @@ public class XmlBeanFactory {
             Document doc = builder.parse(is);
 
             //TODO 적절한 메서드 호출
+            loadBeans(doc);
+
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
             throw new IllegalArgumentException("Parsing XML Exception !");
@@ -80,6 +85,7 @@ public class XmlBeanFactory {
         for (int i = 0; i < nl.getLength(); i++) {
             Node n = nl.item(i);
             //TODO 적절한 메서드 호출
+            loadBean((Element) n);
         }
     }
 
@@ -103,5 +109,6 @@ public class XmlBeanFactory {
 
     private void registerBean(String propertyName, Object claz) {
         //TODO bean 등록
+        beanHash.put(propertyName, claz);
     }
 }

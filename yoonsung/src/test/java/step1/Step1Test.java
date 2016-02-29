@@ -18,8 +18,11 @@ public class Step1Test {
      */
     @Test
     public void registerObjectAsSingleTon() {
-        InputStream inputStream = ClassLoader.getSystemResourceAsStream("step1.xml");
-        XmlBeanFactory beanFactory = new XmlBeanFactory(inputStream);
+        /*InputStream inputStream = ClassLoader.getSystemResourceAsStream("step1.xml");
+        XmlBeanFactory beanFactory = new XmlBeanFactory(inputStream);*/
+
+        XmlBeanFactory beanFactory = new XmlBeanFactory("step1.xml");
+
         A a = beanFactory.getBean("A", A.class);
         assertEquals(a.name, "A");
         a.name = "AA";

@@ -104,5 +104,8 @@ public class AbstractBeanFactory implements BeanFactory {
 
     private void callLifecycleMethodsIfNecessary(Object bean) {
         //TODO 코드구현
+        if (bean instanceof InitializingBean) {
+            ((InitializingBean) bean).afterPropertiesSet();
+        }
     }
 }

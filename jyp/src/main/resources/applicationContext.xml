@@ -15,13 +15,14 @@
 
     <bean id="countingDatasource" class="springbook.user.dao.CountingDataSource">
         <property name="realDatasource" ref="dataSource" />
-    </bean>-->
+    </bean>
 
     <bean id="userDao" class="springbook.user.dao.UserDao">
-        <!--<property name="dataSource" ref="countingDatasource"/>-->
-    </bean>
+        <property name="dataSource" ref="dataSource"/>
+    </bean>-->
 
     <!--<bean id="car" class="jyp.spring.core.Car"></bean>-->
 
+    <bean id="jyp" class="jyp.spring.core.JYP"></bean>
 
 </beans>

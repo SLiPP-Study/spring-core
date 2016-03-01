@@ -17,6 +17,7 @@ public class AbstractBeanFactory implements BeanFactory {
 
     public AbstractBeanFactory(BeanFactory parentBeanFactory) {
         //TODO
+        this.parentBeanFactory = parentBeanFactory;
     }
 
     @Override
@@ -34,6 +35,9 @@ public class AbstractBeanFactory implements BeanFactory {
             throw new IllegalArgumentException("Bean name null is not allowed");
 
         //TODO 아래의 코드들을 부모의 BeanFactory를 같이 사용하도록 변경
+        if (this.parentBeanFactory != null && this.parentBeanFactory.getBean(key) != null) {
+            return this.parentBeanFactory.getBean(key);
+        }
         if (beanHash.containsKey(key)) {
             return beanHash.get(key);
         }
@@ -48,12 +52,19 @@ public class AbstractBeanFactory implements BeanFactory {
     }
 
     public BeanDefinition getBeanDefinition(String key) {
+        if (this.parentBeanFactory != null && this.parentBeanFactory.getBeanDefinition(key) != null) {
+            return this.parentBeanFactory.getBeanDefinition(key);
+        }
         return beanDefinitionHash.get(key);
     }
 
     private Object createBean(String key) {
         try {
             BeanDefinition beanDefinition = getBeanDefinition(key);
+            if (beanDefinition == null) {
+                return null; //
+            }
+
             PropertyValues propertyValues = beanDefinition.getPropertyValues();
             Object newlyCreatedBean = beanDefinition.getBeanClass().newInstance();
             applyPropertyValues(beanDefinition, propertyValues, newlyCreatedBean, key);

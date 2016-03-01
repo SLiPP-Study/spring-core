@@ -80,5 +80,10 @@ public class Step4Test {
      * 그리고 1574번째 줄에서 invokeInitMethods 메소드를 호출합니다. 이 메소드에서는 현재 bean이 InitializingBean을 구현했는지 여부를 판별하고 구현했을 경우 afterPropertiesSet 메소드를 호출합니다.
      * 그리고 1583번째 줄에서 applyBeanPostProcessorsAfterInitialization 메소드를 호출합니다. 이 메소드는 BeanFactory에 등록된 BeanPostProcessor List loop를 돌면서 postProcessAfterInitialization 메소드를 호출합니다.
      * 즉, postProcessBeforeInitialization -> afterPropertiesSet -> postProcessAfterInitialization 순서입니다.
+     *
+     *
+     *
+     * 과제2)
+     * child BeanFactory에서 parent BeanFactory의 BeanDefinition을 가져오기 위해 BeanFactory interface에 getBeanDefinition 메소드를 추가함
      */
 }

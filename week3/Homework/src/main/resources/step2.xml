@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+    <bean id="B" class="bean.B">
+        <property name="name" value="Yoonsung"/>
+        <property name="age" value="29"/>
+    </bean>
+</beans>

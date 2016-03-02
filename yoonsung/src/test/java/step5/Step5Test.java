@@ -55,7 +55,7 @@ public class Step5Test {
      * 결과적으로 아래의 테스트코드가 성공할 수 있도록 한다.
      *
      * 힌트)
-     * 1. AbstractBeanFactory는 역할분리를 위해 템플릿 메서드패턴이 필요하므로 abstact class가 된다.
+     * 1. AbstractBeanFactory는 역할분리를 위해 템플릿 메서드패턴이 필요하므로 abstract class가 된다.
      * 2. BeanDefinition의 정보를 관리하는 메서드가 어디서 사용되는 확인해본다.
      */
     @Test
@@ -67,4 +67,22 @@ public class Step5Test {
 
         assertTrue(Math.abs(d.createdAt - e.createdAt) < 2000);
     }
+
+
+    /**
+     * 과제1)
+     * ## 일괄초기화 기능을 어디서 가지고 있어야 할지 생각해본다.
+     * ->
+     * 일괄 초기화 기능은 XmlBeanFactory 보다는 좀 더 추상 계층에 있어야 한다고 생각합니다. 공통적으로 사용이 가능하기 때문인데요,
+     * 다만 일괄 초기화 로직이 다양해질 수 있기 때문에 (ex-단순히 bean을 생성하는 로직뿐만 아니라 lazyLoading 기능이 추가될 경우, scope에 따른 분기를 타야 할 경우)
+     * 너무 추상 계층에 있어도 안된다고 생각합니다.
+     */
+
+
+    /**
+     * 과제2)
+     * DefaultListableBeanFactory 클래스에서 일괄 초기화를 수행하기 위해 지금까지 등록된 BeanDefinition 정보가 필요했습니다.
+     * 따라서 Map<String, BeanDefinition>을 반환하는 메소드를 공개 API로 추가하였습니다.
+     *
+     */
 }

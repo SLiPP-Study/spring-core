@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AbstractBeanFactory implements BeanFactory {
+public class AbstractBeanFactory implements ListableBeanFactory {
 
     private final BeanFactory parentBeanFactory;
     /**
@@ -111,5 +111,10 @@ public class AbstractBeanFactory implements BeanFactory {
         if (bean instanceof InitializingBean) {
             ((InitializingBean) bean).afterPropertiesSet();
         }
+    }
+
+    @Override
+    public Map<String, BeanDefinition> getBeanDefinitionHash() {
+        return this.beanDefinitionHash;
     }
 }

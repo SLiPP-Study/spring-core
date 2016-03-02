@@ -14,7 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class XmlBeanFactory extends AbstractBeanFactory {
+public class XmlBeanFactory extends DefaultListableBeanFactory {
 
     private static final String BEAN_ELEMENT = "bean";
     private static final String CLASS_ATTRIBUTE = "class";
@@ -30,12 +30,14 @@ public class XmlBeanFactory extends AbstractBeanFactory {
     public XmlBeanFactory(InputStream inputStream) {
         super(null);
         loadBeanDefinitions(inputStream);
+        initBeans();
     }
 
     public XmlBeanFactory(String fileName, BeanFactory parentBeanFactory) {
         super(parentBeanFactory);
         try {
             loadBeanDefinitions(fileName);
+            initBeans();
         } catch (FileNotFoundException e) {
             throw new IllegalArgumentException(String.format("Cant not open file : %s", fileName));
         }
@@ -44,6 +46,7 @@ public class XmlBeanFactory extends AbstractBeanFactory {
     public XmlBeanFactory(InputStream inputStream, BeanFactory parentBeanFactory) {
         super(parentBeanFactory);
         loadBeanDefinitions(inputStream);
+        initBeans();
     }
 
     private void loadBeanDefinitions(String location) throws FileNotFoundException {

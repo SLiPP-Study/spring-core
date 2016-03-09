@@ -1,4 +1,5 @@
 import java.sql.SQLException;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -30,7 +31,7 @@ import static org.junit.Assert.assertTrue;
  * @date 2016. 1. 26.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(/*value = locations = "/applicationContext.xml",*/ classes = DaoFactory.class)
+@ContextConfiguration(locations = "/applicationContext.xml")
 public class UserDaoTest {
 
     @Autowired
@@ -48,9 +49,9 @@ public class UserDaoTest {
         //ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
         //AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
 
-        user1 = new User("testID1", "박진영", "pw1");
-        user2 = new User("testID2", "박진일", "pw2");
-        user3 = new User("testID3", "박진이", "pw3");
+        user1 = new User("testID1", "jyp", "pw1");
+        user2 = new User("testID2", "jyp2", "pw2");
+        user3 = new User("testID3", "jyp3", "pw3");
     }
 
     @After
@@ -97,5 +98,38 @@ public class UserDaoTest {
         assertThat(userDao.getCount(), is(0));
 
         userDao.get("unknow_id");
+    }
+
+    @Test
+    public void getAll() throws SQLException {
+        userDao.deleteAll();
+
+        List<User> users0 = userDao.getAll();
+        assertThat(users0.size(), is(0));
+
+        userDao.add(user1);
+        List<User> users1 = userDao.getAll();
+        assertThat(users1.size(), is(1));
+        checkSameUser(user1, users1.get(0));
+
+        userDao.add(user2);
+        List<User> users2 = userDao.getAll();
+        assertThat(users2.size(), is(2));
+        checkSameUser(user1, users2.get(0));
+        checkSameUser(user2, users2.get(1));
+
+        userDao.add(user3);
+        List<User> users3 = userDao.getAll();
+        assertThat(users3.size(), is(3));
+        checkSameUser(user1, users3.get(0));
+        checkSameUser(user2, users3.get(1));
+        checkSameUser(user3, users3.get(2));
+
+    }
+
+    private void checkSameUser(User user1, User user2) {
+        assertThat(user1.getId(), is(user2.getId()));
+        assertThat(user1.getName(), is(user2.getName()));
+        assertThat(user1.getPassword(), is(user2.getPassword()));
     }
 }

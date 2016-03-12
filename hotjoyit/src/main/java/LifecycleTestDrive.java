@@ -36,6 +36,9 @@ public class LifecycleTestDrive {
     AbstractApplicationContext ctx = new ClassPathXmlApplicationContext
         ("classpath:spring-config.xml");
 
+    // add a shutdown hook for the above context...
+    ctx.registerShutdownHook();
+
     IndependentBean independentBean = ctx.getBean("independentBean", IndependentBean.class);
     System.out.println(independentBean.getSecret());
   }

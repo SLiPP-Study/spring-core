@@ -5,6 +5,8 @@ import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.BeanNameAware;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.ResourceLoader;
 
@@ -12,7 +14,7 @@ import org.springframework.core.io.ResourceLoader;
  * Created by hotjoyit on 16. 3. 12.
  */
 public abstract class CommonBean implements BeanNameAware, BeanClassLoaderAware,
-    BeanFactoryAware, ResourceLoaderAware {
+    BeanFactoryAware, ResourceLoaderAware, InitializingBean, DisposableBean {
 
   public CommonBean() {
     System.out.println(String.format("@Construct : %s instantiated", getName()));
@@ -49,5 +51,15 @@ public abstract class CommonBean implements BeanNameAware, BeanClassLoaderAware,
   @Override
   public void setResourceLoader(ResourceLoader resourceLoader) {
     System.out.println(String.format("@ResourceLoaderAware : %s setResourceLoader() is called", getName()));
+  }
+
+  @Override
+  public void afterPropertiesSet() throws Exception {
+    System.out.println(String.format("@InitializingBean : %s is going through init", getName()));
+  }
+
+  @Override
+  public void destroy() throws Exception {
+    System.out.println(String.format("@DisposableBean : %s will destroy now", getName()));
   }
 }

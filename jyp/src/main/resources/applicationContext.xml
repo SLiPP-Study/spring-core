@@ -17,7 +17,7 @@
         <property name="realDatasource" ref="dataSource" />
     </bean>
 
-    <bean id="userDao" class="springbook.user.dao.UserDao">
+    <bean id="userDao" class="springbook.user.dao.UserDaoJdbc">
         <property name="dataSource" ref="countingDatasource"/>
         <!--<property name="jdbcContext" ref="jdbcContext" />-->
     </bean>

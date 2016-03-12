@@ -9,6 +9,6 @@
 <property name="password" value="root"/>
 </bean>
 
-<bean id="userDao" class="springbook.user.dao.UserDao">
+<bean id="userDao" class="springbook.user.dao.UserDaoJdbc">
 <property name="dataSource" ref="countingDatasource"/>
 </bean>

@@ -8,6 +8,23 @@
     <artifactId>hotjoyit</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <properties>
+        <jdk.compiler.version>1.8</jdk.compiler.version>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${jdk.compiler.version}</source>
+                    <target>${jdk.compiler.version}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>

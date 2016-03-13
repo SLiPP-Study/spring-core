@@ -26,5 +26,16 @@
         <property name="dataSource" ref="countingDatasource" />
     </bean>
 
+    <bean id="userService" class="springbook.user.service.UserService">
+        <property name="userDao" ref="userDao"/>
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="mailSender" ref="mailSender"/>
+    </bean>
 
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="countingDatasource"/>
+    </bean>
+
+    <bean id="mailSender" class="springbook.user.service.DummyMailSender">
+    </bean>
 </beans>

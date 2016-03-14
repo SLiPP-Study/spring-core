@@ -1,4 +1,5 @@
 import bean.IndependentBean;
+import org.apache.log4j.Logger;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -31,6 +32,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 
 public class LifecycleTestDrive {
+
+  static Logger log = Logger.getLogger(LifecycleTestDrive.class.getName());
 
   public static void main(String[] args) {
     AbstractApplicationContext ctx = new ClassPathXmlApplicationContext

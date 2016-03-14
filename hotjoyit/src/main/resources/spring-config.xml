@@ -5,6 +5,11 @@
 
     <bean class="postprocessor.BeanPostProcessorImpl" />
 
+    <bean id="dependentBean" class="bean.DependentBean" scope="singleton">
+        <property name="secret" value="I'm Dependent Bean" />
+        <property name="independentBean" ref="independentBean" />
+    </bean>
+
     <bean id="independentBean" class="bean.IndependentBean" scope="singleton">
         <property name="secret" value="I'm Independent Bean" />
     </bean>

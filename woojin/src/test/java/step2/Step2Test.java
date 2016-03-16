@@ -27,16 +27,16 @@ public class Step2Test {
      */
     @Test
     public void registerBeanWithProperty() {
-        InputStream inputStream = ClassLoader.getSystemResourceAsStream("src/test/resources/step2.xml");
+        InputStream inputStream = ClassLoader.getSystemResourceAsStream("step2.xml");
         XmlBeanFactory beanFactory = new XmlBeanFactory(inputStream);
         B b = beanFactory.getBean("B", B.class);
-        assertEquals(b.getName(), "Yoonsung");
-        assertEquals(b.getAge(), 29);
-        b.setName("Java");
-        b.setAge(22);
+        assertEquals(b.name, "Yoonsung");
+        assertEquals(b.age.intValue(), 29);
+        b.name = "Java";
+        b.age = 22;
 
         B reloadedB = beanFactory.getBean("B", B.class);
-        assertEquals(reloadedB.getName(), "Java");
-        assertEquals(reloadedB.getAge(), 22);
+        assertEquals(reloadedB.name, "Java");
+        assertEquals(reloadedB.age.intValue(), 22);
     }
 }

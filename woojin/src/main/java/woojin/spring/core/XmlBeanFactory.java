@@ -12,15 +12,18 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by woojin on 2016. 3. 16.
  */
 @Slf4j
 public class XmlBeanFactory {
-	public static final String CLASS_FIELDS = "class";
-	public static final String ID_FIELDS = "id";
+	public static final String CLASS_ATTR = "class";
+	public static final String ID_ATTR = "id";
 	private Document document;
+	private static final Map<String, Object> BEAN_CONTAINER = new HashMap<>();
 
 	public XmlBeanFactory(InputStream inputStream) {
 
@@ -34,14 +37,20 @@ public class XmlBeanFactory {
 	private void initBeans() {
 		NodeList nList = document.getElementsByTagName("bean");
 
-		for (int temp = 0; temp < nList.getLength(); temp++) {
-			Node nNode = nList.item(temp);
-			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-				Element eElement = (Element) nNode;
-				String beanId = eElement.getAttribute(ID_FIELDS);
-				String beanClassPackage = eElement.getAttribute(CLASS_FIELDS);
-				log.debug("Bean id: {} / class: {}", beanId, beanClassPackage);
+		try {
+			for (int temp = 0; temp < nList.getLength(); temp++) {
+				Node nNode = nList.item(temp);
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+					Element eElement = (Element) nNode;
+					String beanId = eElement.getAttribute(ID_ATTR);
+					String beanClassQname = eElement.getAttribute(CLASS_ATTR);
+					log.debug("Bean id: {} / class: {}", beanId, beanClassQname);
+					Object c = Class.forName(beanClassQname).newInstance();
+					BEAN_CONTAINER.put(beanId, c);
+				}
 			}
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+			e.printStackTrace();
 		}
 
 	}
@@ -69,7 +78,7 @@ public class XmlBeanFactory {
 	}
 
 	public <T> T getBean(String beanName, Class<T> beanClassType) {
-		return null;
+		return beanClassType.cast(BEAN_CONTAINER.get(beanName));
 	}
 }
 

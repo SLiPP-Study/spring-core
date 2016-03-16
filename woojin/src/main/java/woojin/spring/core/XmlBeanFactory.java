@@ -1,6 +1,7 @@
 package woojin.spring.core;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -17,6 +18,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.IntStream;
 
 /**
@@ -55,31 +57,56 @@ public class XmlBeanFactory {
 			String beanClassQName = eElement.getAttribute(CLASS_ATTR);
 
 			log.debug("Bean id: {} / class: {}", beanId, beanClassQName);
-			Object c = null;
 			try {
-				c = Class.forName(beanClassQName).newInstance();
+				final Object c = Class.forName(beanClassQName).newInstance();
+
+				NodeList childNodes = eElement.getChildNodes();
+				String[] packages = StringUtils.split(beanClassQName, ".");
+				putProperties(packages[packages.length-1], childNodes);
+				Map<String, String> properties = BEAN_PROPERTIES.get(beanId);
+				properties.entrySet().stream().forEach(e -> invokeSetter(c, e.getKey(), e.getValue()));
+
+				BEAN_CONTAINER.put(beanId, c);
 			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 				e.printStackTrace();
 			}
-			BEAN_CONTAINER.put(beanId, c);
 
-			putProperties(beanClassQName, eElement.getElementsByTagName(PROPERTY_NAME));
+		}
+	}
+
+	private <T> void invokeSetter(T bean, String propName, String propVal) {
+		try {
+			Class beanType = bean.getClass();
+			Field field = beanType.getField(propName);
+			Class fieldClazz = beanType.getField(propName).getType();
+
+			if (fieldClazz.equals(Integer.class)) {
+				beanType.getDeclaredMethod("set" + WordUtils.capitalize(propName), Integer.class)
+						.invoke(bean, Integer.parseInt(propVal));
+
+			} else if (fieldClazz.equals(String.class)) {
+				beanType.getDeclaredMethod("set" + WordUtils.capitalize(propName), String.class)
+						.invoke(bean, propVal);
+			}
+		} catch (NoSuchFieldException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e1) {
+			e1.printStackTrace();
 		}
 	}
 
 	private void putProperties(String beanName, NodeList propertyNodes) {
-		IntStream.range(0, propertyNodes.getLength()).forEach(i -> {
-			Node propertyNode = propertyNodes.item(i);
-			if (propertyNode.getNodeType() == Node.ELEMENT_NODE) {
-				Element eElement = (Element) propertyNode;
-				String propName = eElement.getAttribute(NAME_ATTR);
-				String propVal = eElement.getAttribute(VALUE_ATTR);
-				Map<String, String> properties = new HashMap<>();
-				properties.put(NAME_ATTR, propName);
-				properties.put(VALUE_ATTR, propVal);
-				BEAN_PROPERTIES.put(beanName, properties);
-			}
-		});
+		Map<String, String> properties = new ConcurrentHashMap<>();
+		IntStream.range(0, propertyNodes.getLength())
+				.parallel()
+				.mapToObj(propertyNodes::item)
+				.filter(n -> n.getNodeName().equals(PROPERTY_NAME))
+				.filter(n -> n.getNodeType() == Node.ELEMENT_NODE)
+				.map(n -> (Element) n)
+				.forEach(e -> {
+					final String propName = e.getAttribute(NAME_ATTR);
+					final String propVal = e.getAttribute(VALUE_ATTR);
+					properties.put(propName, propVal);
+					BEAN_PROPERTIES.put(beanName, properties);
+				});
 	}
 
 	protected void beforeParseXml() {
@@ -105,32 +132,8 @@ public class XmlBeanFactory {
 	}
 
 	public <T> T getBean(String beanName, Class<T> beanClassType) {
-		T bean = beanClassType.cast(BEAN_CONTAINER.get(beanName));
-
-		Map<String, String> properties = BEAN_PROPERTIES.get(beanName);
-
-		properties.entrySet().stream().forEach(e -> invokeSetter(bean, e.getKey(), e.getValue()));
-
-		return bean;
+		return beanClassType.cast(BEAN_CONTAINER.get(beanName));
 	}
 
-	private <T> void invokeSetter(T bean, String propName, String propVal) {
-		try {
-			Class beanType = bean.getClass();
-			Field field = beanType.getField(propName);
-			Class fieldClazz = beanType.getField(propName).getType();
-
-			if (fieldClazz.equals(Integer.class)) {
-				beanType.getDeclaredMethod("set" + WordUtils.capitalize(propName), Integer.class)
-						.invoke(bean, Integer.parseInt(propVal));
-
-			} else if (fieldClazz.equals(String.class)) {
-				beanType.getDeclaredMethod("set" + WordUtils.capitalize(propName), Integer.class)
-						.invoke(bean, propVal);
-			}
-		} catch (NoSuchFieldException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e1) {
-			e1.printStackTrace();
-		}
-	}
 }
 

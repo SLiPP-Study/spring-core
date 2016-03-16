@@ -27,7 +27,7 @@ public class Step2Test {
      */
     @Test
     public void registerBeanWithProperty() {
-        InputStream inputStream = ClassLoader.getSystemResourceAsStream("step2.xml");
+        InputStream inputStream = ClassLoader.getSystemResourceAsStream("homework/step2.xml");
         XmlBeanFactory beanFactory = new XmlBeanFactory(inputStream);
         B b = beanFactory.getBean("B", B.class);
         assertEquals(b.name, "Yoonsung");

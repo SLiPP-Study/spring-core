@@ -18,7 +18,7 @@ public class UserTest {
 
     @Before
     public void setUp() {
-        user = new User();
+        //user = new User();
     }
 
     @Test

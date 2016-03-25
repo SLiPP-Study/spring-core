@@ -1,9 +1,17 @@
 package springbook.user.domain;
 
+import org.springframework.beans.BeansException;
+
+import jyp.springframework.beans.factory.*;
+import jyp.springframework.beans.factory.config.BeanPostProcessor;
+import jyp.springframework.context.ResourceLoaderAware;
+import jyp.springframework.core.io.ResourceLoader;
 import lombok.ToString;
 
 @ToString
-public class User {
+public class User implements InitializingBean, DisposableBean, BeanNameAware, BeanFactoryAware,
+        ResourceLoaderAware, BeanPostProcessor {
+
     String id;
     String name;
     String password;
@@ -13,7 +21,15 @@ public class User {
 
     int login;
     int recommend;
-    public User() {}
+
+    Age age;
+
+    public User() {
+    }
+
+    public User(Age age) {
+        this.age = age;
+    }
 
     public User(String id, String name, String password) {
         this.id = id;
@@ -31,8 +47,52 @@ public class User {
         this.email = email;
     }
 
+    public User(String id, String name, String password, String email, Level level, int login, int recommend,
+            Age age) {
+        this.id = id;
+        this.name = name;
+        this.password = password;
+        this.email = email;
+        this.level = level;
+        this.login = login;
+        this.recommend = recommend;
+        this.age = age;
+    }
+
     public User(String id, String name, String password, Level level, int login, int recommend) {
         this(id, name, password, level, login, recommend, null);
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+    }
+
+    @Override
+    public void destroy() throws Exception {
+    }
+
+    @Override
+    public void setBeanName(String name) {
+    }
+
+    @Override
+    public void setBeanFactory(BeanFactory var1) throws BeansException {
+    }
+
+    @Override
+    public void setResourceLoader(ResourceLoader var1) {
+    }
+
+    @Override
+    public Object postProcessBeforeInitialization(Object bean, String name)
+            throws jyp.springframework.beans.BeansException {
+        return bean;
+    }
+
+    @Override
+    public Object postProcessAfterInitialization(Object bean, String name)
+            throws jyp.springframework.beans.BeansException {
+        return bean;
     }
 
     public void upgradeLevel() {
@@ -98,5 +158,13 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Age getAge() {
+        return age;
+    }
+
+    public void setAge(Age age) {
+        this.age = age;
     }
 }

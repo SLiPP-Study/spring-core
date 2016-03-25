@@ -1,4 +1,4 @@
-package core;
+package step1.core;
 
 public class BeanDefinition {
     private final Class clazz;

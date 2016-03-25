@@ -1,4 +1,4 @@
-package core;
+package step1.core;
 
 import java.util.ArrayList;
 

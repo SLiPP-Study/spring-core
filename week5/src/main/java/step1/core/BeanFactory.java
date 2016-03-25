@@ -1,4 +1,4 @@
-package core;
+package step1.core;
 
 public interface BeanFactory {
     Object getBean(String name);

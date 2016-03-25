@@ -1,4 +1,4 @@
-package core;
+package step1.core;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -31,6 +31,7 @@ public abstract class AbstractBeanFactory implements BeanFactory {
     }
 
     private Object getBeanInternal(String key) {
+    	System.out.println("getBeanInternal in");
         if (key == null)
             throw new IllegalArgumentException("Bean name null is not allowed");
 

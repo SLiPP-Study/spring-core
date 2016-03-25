@@ -1,4 +1,4 @@
-package core;
+package step1.core;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

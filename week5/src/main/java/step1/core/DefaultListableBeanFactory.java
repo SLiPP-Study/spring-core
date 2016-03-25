@@ -28,7 +28,6 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory
 	}
 
 	protected void preInstantiate() {
-		System.out.println("preInstantiate");
 		String[] beanNames = getBeanDefinitionNames();
 		for (int i = 0; i < getBeanDefinitionCount(); i++) {
 			getBean(beanNames[i]);
@@ -47,5 +46,11 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory
 	@Override
 	public BeanDefinition getBeanDefinition(String key) {
 		return beanDefinitionHash.get(key);
+	}
+	
+	@Override
+	public void clear() {
+		beanDefinitionHash.clear();
+		super.clearBeanHash();
 	}
 }

@@ -31,7 +31,6 @@ public abstract class AbstractBeanFactory implements BeanFactory {
     }
 
     private Object getBeanInternal(String key) {
-    	System.out.println("getBeanInternal in");
         if (key == null)
             throw new IllegalArgumentException("Bean name null is not allowed");
 
@@ -105,5 +104,9 @@ public abstract class AbstractBeanFactory implements BeanFactory {
 //        if (bean instanceof step4.InitializingBean) {
 //            ((step4.InitializingBean) bean).afterPropertiesSet();
 //        }
+    }
+    
+    public void clearBeanHash() {
+    	beanHash.clear();
     }
 }

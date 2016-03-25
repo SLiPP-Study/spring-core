@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+    <bean id="javajigi"	class="step1.bean.Javajigi"/>
+    <bean id="jyp"		class="step1.bean.Jyp"/>
+    <bean id="woniper"  class="step1.bean.Woniper" />
+    <bean id="woojin"	class="step1.bean.Yoonsung" />
+    <bean id="coreTeam1"	class="step2.bean.CoreTeam1">
+	    <constructor-arg ref="javajigi" />
+    </bean>
+    <bean id="coreTeam2"	class="step2.bean.CoreTeam2">
+    	<constructor-arg ref="jyp" />
+    	<constructor-arg ref="woniper" />
+    </bean>
+    <bean id="coreTeam3"	class="step2.bean.CoreTeam3">
+	    <constructor-arg ref="javajigi" />
+    	<constructor-arg ref="jyp" />
+    	<constructor-arg ref="woniper" />
+    </bean>
+</beans>

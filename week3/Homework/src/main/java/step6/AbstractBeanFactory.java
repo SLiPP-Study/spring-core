@@ -14,11 +14,11 @@ public abstract class AbstractBeanFactory implements BeanFactory {
      */
     private Map beanHash = new HashMap();
 
-    public abstract BeanDefinition getBeanDefinition(String key);
-
     public AbstractBeanFactory(BeanFactory parentBeanFactory) {
         this.parentBeanFactory = parentBeanFactory;
     }
+
+    public abstract BeanDefinition getBeanDefinition(String key);
 
     @Override
     public <T> T getBean(String key, Class<T> clazz) {
@@ -102,8 +102,8 @@ public abstract class AbstractBeanFactory implements BeanFactory {
 
     private void callLifecycleMethodsIfNecessary(Object bean) {
         //이전 테스트와 깨지지 않게 유지하기 위해서 step4의 InitializingBean을 import합니다.
-        if (bean instanceof step4.InitializingBean) {
-            ((step4.InitializingBean) bean).afterPropertiesSet();
+        if (bean instanceof InitializingBean) {
+            ((InitializingBean)bean).afterPropertiesSet();
         }
     }
 }

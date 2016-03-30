@@ -37,9 +37,9 @@ public class Step2Test {
 		CoreTeam2 coreTeam2 = (CoreTeam2) beanFactory.getBean("coreTeam2");
 		CoreTeam3 coreTeam3 = (CoreTeam3) beanFactory.getBean("coreTeam3");
 		
-		assertEquals("¹ÚÀç¼º", coreTeam1.getMeberNames());
-		assertEquals("¹ÚÁø¿µ ÀÌ°æ¿ø ", coreTeam2.getMeberNames());
-		assertEquals("¹ÚÀç¼º ¹ÚÁø¿µ ÀÌ°æ¿ø ", coreTeam3.getMeberNames());
+        assertEquals("ë°•ì¬ì„±", coreTeam1.getMeberNames());
+        assertEquals("ë°•ì§„ì˜ ì´ê²½ì› ", coreTeam2.getMeberNames());
+        assertEquals("ë°•ì¬ì„± ë°•ì§„ì˜ ì´ê²½ì› ", coreTeam3.getMeberNames());
 	}
 	
 	@After

@@ -4,7 +4,7 @@ public class Woniper implements SpringCoreMember {
 
 	@Override
 	public String getName() {
-		return "ÀÌ°æ¿ø";
+        return "ì´ê²½ì›";
 	}
 
 }

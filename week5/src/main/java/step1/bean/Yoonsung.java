@@ -4,6 +4,6 @@ public class Yoonsung implements SpringCoreMember {
 
 	@Override
 	public String getName() {
-		return "Á¤À±¼º";
+        return "ì •ìœ¤ì„±";
 	}
 }

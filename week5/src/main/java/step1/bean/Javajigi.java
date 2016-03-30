@@ -4,7 +4,7 @@ public class Javajigi implements SpringCoreMember {
 
 	@Override
 	public String getName() {
-		return "¹ÚÀç¼º";
+        return "ë°•ìž¬ì„±";
 	}
 	
 }

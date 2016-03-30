@@ -4,7 +4,7 @@ public class Jyp implements SpringCoreMember {
 
 	@Override
 	public String getName() {
-		return "¹ÚÁø¿µ";
+        return "ë°•ì§„ì˜";
 	}
 	
 }

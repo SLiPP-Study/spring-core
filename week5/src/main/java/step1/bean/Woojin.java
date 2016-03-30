@@ -4,7 +4,7 @@ public class Woojin implements SpringCoreMember {
 
 	@Override
 	public String getName() {
-		return "Á¶¿ìÁø";
+        return "ì¡°ìš°ì§„";
 	}
 
 }

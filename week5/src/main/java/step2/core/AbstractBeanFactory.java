@@ -1,5 +1,6 @@
-package step1.core;
+package step2.core;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -21,16 +22,16 @@ public abstract class AbstractBeanFactory implements BeanFactory {
     }
 
     @Override
-    public <T> T getBean(String key, Class<T> clazz) {
+    public <T> T getBean(String key, Class<T> clazz) throws NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException {
         return (T) getBean(key);
     }
 
     @Override
-    public Object getBean(String key) {
+    public Object getBean(String key) throws NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException {
         return getBeanInternal(key);
     }
 
-    private Object getBeanInternal(String key) {
+    private Object getBeanInternal(String key) throws NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException {
         if (key == null)
             throw new IllegalArgumentException("Bean name null is not allowed");
 
@@ -39,7 +40,7 @@ public abstract class AbstractBeanFactory implements BeanFactory {
         } else {
             BeanDefinition beanDefinition = getBeanDefinition(key);
             if (beanDefinition != null) {
-                Object newlyCreatedBean = createBean(key);
+                Object newlyCreatedBean = createBean(beanDefinition, key);
                 beanHash.put(key, newlyCreatedBean);
                 return newlyCreatedBean;
             } else {
@@ -50,21 +51,44 @@ public abstract class AbstractBeanFactory implements BeanFactory {
         }
     }
 
-    private Object createBean(String key) {
+    private Object createBean(BeanDefinition beanDefinition, String beanName) throws NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException {
         try {
-            BeanDefinition beanDefinition = getBeanDefinition(key);
+            //BeanDefinition beanDefinition = getBeanDefinition(key);
+        	ConstructorArguments constructorArguments = beanDefinition.getConstructorArguments();
             PropertyValues propertyValues = beanDefinition.getPropertyValues();
-            Object newlyCreatedBean = beanDefinition.getBeanClass().newInstance();
             
-            applyPropertyValues(beanDefinition, propertyValues, newlyCreatedBean, key);
+            Object newlyCreatedBean;
+            
+            ConstructorArgument[] argsArray = constructorArguments.getConstructorArguments();
+            
+            if (argsArray.length > 0) {
+            	
+            	int argsSize = argsArray.length;
+            	
+            	Class[] constructorArgs = new Class[argsSize];
+            	Object[] instanceArgs = new Object[argsSize];
+            	
+            	for (int i = 0; i < argsSize; i++) {
+            		Object argBean = getBean(argsArray[i].getRefId());
+            		constructorArgs[i] = argBean.getClass();
+            		instanceArgs[i] = argBean;
+				}
+            	
+            	Constructor constructor = beanDefinition.getBeanClass().getConstructor(constructorArgs);
+				newlyCreatedBean = constructor.newInstance(instanceArgs); 
+			} else {
+				newlyCreatedBean = beanDefinition.getBeanClass().newInstance();;
+			}
+            
+            applyPropertyValues(beanDefinition, propertyValues, newlyCreatedBean, beanName);
             callLifecycleMethodsIfNecessary(newlyCreatedBean);
             return newlyCreatedBean;
         } catch (InstantiationException e) {
             e.printStackTrace();
-            throw new IllegalArgumentException("Cannot instantiate [bean name : " + key + "]; is it an interface or an abstract class?");
+            throw new IllegalArgumentException("Cannot instantiate [bean name : " + beanName + "]; is it an interface or an abstract class?");
         } catch (IllegalAccessException e) {
             e.printStackTrace();
-            throw new IllegalArgumentException("Cannot instantiate [bean name : " + key + "]; has class definition changed? Is there a public constructor?");
+            throw new IllegalArgumentException("Cannot instantiate [bean name : " + beanName + "]; has class definition changed? Is there a public constructor?");
         }
     }
 

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+    <bean id="javajigi" class="jyp.bean.Javajigi"/>
+
+    <bean id="coreTeam1" class="jyp.bean.CoreTeam1">
+        <property name="javajigi" ref="javajigi" />
+    </bean>
+</beans>

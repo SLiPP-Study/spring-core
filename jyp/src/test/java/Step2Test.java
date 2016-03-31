@@ -38,7 +38,7 @@ public class Step2Test {
         CoreTeam2 coreTeam2 = (CoreTeam2) beanFactory.getBean("coreTeam2");
         CoreTeam3 coreTeam3 = (CoreTeam3) beanFactory.getBean("coreTeam3");
 
-        assertEquals("박재성", coreTeam1.getMeberNames());
+        assertEquals("박재성", coreTeam1.getMemberNames());
         assertEquals("박진영 이경원", coreTeam2.getMeberNames());
         assertEquals("박재성 박진영 이경원", coreTeam3.getMeberNames());
     }

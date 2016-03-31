@@ -8,7 +8,13 @@ public class CoreTeam1 implements SpringCoreTeam {
 
     private Javajigi javajigi;
 
+    public CoreTeam1() {}
+
     public CoreTeam1(Javajigi javajigi) {
+        this.javajigi = javajigi;
+    }
+
+    public void setJavajigi(Javajigi javajigi) {
         this.javajigi = javajigi;
     }
 
@@ -18,7 +24,7 @@ public class CoreTeam1 implements SpringCoreTeam {
     }
 
     @Override
-    public String getMeberNames() {
+    public String getMemberNames() {
         return javajigi.getName();
     }
 }

@@ -21,6 +21,8 @@ public class XmlBeanDefinitionReader implements BeanDefinitionReader {
     private static final String PROPERTY_ELEMENT = "property";
     private static final String NAME_ATTRIBUTE = "name";
     private static final String VALUE_ATTRIBUTE = "value";
+    private static final String CONSTRUCTOR_ARG = "constructor-arg";
+    private static final String REF_ATTRIBUTE = "ref";
 
     private final BeanDefinitionRegistry beanDefinitionRegistry;
 
@@ -69,8 +71,26 @@ public class XmlBeanDefinitionReader implements BeanDefinitionReader {
             throw new IllegalArgumentException("Bean without id attribute");
 
         PropertyValues propertyValues = createPropertyValues(element);
-        BeanDefinition beanDefinition = createBeanDefinition(element, id, propertyValues);
+        ConstructorArgument constructorArgument = createConstructorArgument(element);
+        BeanDefinition beanDefinition = createBeanDefinition(element, id, propertyValues, constructorArgument);
         beanDefinitionRegistry.registerBeanDefinition(id, beanDefinition);
+    }
+
+    private ConstructorArgument createConstructorArgument(Element element) {
+
+        NodeList childNodes = element.getElementsByTagName(CONSTRUCTOR_ARG);
+        if (childNodes.getLength() == 0) {
+            return null;
+        }
+
+        String[] refNames = new String[childNodes.getLength()];
+
+        for (int i=0; i < childNodes.getLength(); i++) {
+            Node item = childNodes.item(i);
+            String refName = ((Element) item).getAttribute(REF_ATTRIBUTE);
+            refNames[i] = refName;
+        }
+        return new ConstructorArgument(refNames);
     }
 
     private PropertyValue createPropertyValue(Element propElement) {
@@ -98,13 +118,13 @@ public class XmlBeanDefinitionReader implements BeanDefinitionReader {
         return propertyValues;
     }
 
-    private BeanDefinition createBeanDefinition(Element element, String id, PropertyValues propertyValues) {
+    private BeanDefinition createBeanDefinition(Element element, String id, PropertyValues propertyValues, ConstructorArgument constructorArgument) {
         if (!element.hasAttribute(CLASS_ATTRIBUTE))
             throw new IllegalArgumentException("Bean without class attribute");
         String classname = element.getAttribute(CLASS_ATTRIBUTE);
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         try {
-            return new BeanDefinition(Class.forName(classname, true, classLoader), propertyValues);
+            return new BeanDefinition(Class.forName(classname, true, classLoader), propertyValues, constructorArgument);
         } catch (ClassNotFoundException e) {
             throw new UnsupportedOperationException(
                 "Error creating bean with name [" + id + "]: class '" + classname + "' not found", e);

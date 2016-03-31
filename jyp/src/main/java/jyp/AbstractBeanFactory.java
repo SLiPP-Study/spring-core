@@ -1,10 +1,12 @@
 package jyp;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public abstract class AbstractBeanFactory implements BeanFactory {
 
@@ -12,7 +14,7 @@ public abstract class AbstractBeanFactory implements BeanFactory {
     /**
      * Map of Bean objects, keyed by id attribute
      */
-    private Map beanHash = new HashMap();
+    private Map<String, Object> beanHash = new HashMap();
 
     public AbstractBeanFactory(BeanFactory parentBeanFactory) {
         this.parentBeanFactory = parentBeanFactory;
@@ -55,7 +57,28 @@ public abstract class AbstractBeanFactory implements BeanFactory {
         try {
             BeanDefinition beanDefinition = getBeanDefinition(key);
             PropertyValues propertyValues = beanDefinition.getPropertyValues();
-            Object newlyCreatedBean = beanDefinition.getBeanClass().newInstance();
+
+            Object newlyCreatedBean;
+
+            ConstructorArgument constructorArgument = beanDefinition.getConstructorArgument();
+            if (constructorArgument == null) {
+                newlyCreatedBean = beanDefinition.getBeanClass().newInstance();
+            } else {
+                String[] refNames = constructorArgument.getRefNames();
+                Object[] refBeans = new Object[refNames.length];
+                Class[] refBeanClass = new Class[refNames.length];
+
+                for (int i=0; i<refNames.length; i++) {
+                    Object refBean = getBean(refNames[i]);
+                    refBeanClass[i] = refBean.getClass();
+                    refBeans[i] = refBean;
+                }
+
+                Class beanClass = beanDefinition.getBeanClass();
+                Constructor constructor = beanClass.getConstructor(refBeanClass);
+                newlyCreatedBean = constructor.newInstance(refBeans);
+            }
+
             applyPropertyValues(beanDefinition, propertyValues, newlyCreatedBean, key);
             callLifecycleMethodsIfNecessary(newlyCreatedBean);
             return newlyCreatedBean;
@@ -67,6 +90,12 @@ public abstract class AbstractBeanFactory implements BeanFactory {
             e.printStackTrace();
             throw new IllegalArgumentException("Cannot instantiate [bean name : " + key
                 + "]; has class definition changed? Is there a public constructor?");
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("Cannot instantiate [bean name: " + key + "]");
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("Cannot instantiate [bean name: " + key + "]");
         }
     }
 
@@ -112,9 +141,9 @@ public abstract class AbstractBeanFactory implements BeanFactory {
     }
 
     private void callLifecycleMethodsIfNecessary(Object bean) {
-        if (bean instanceof InitializingBean) {
+        /*if (bean instanceof InitializingBean) {
             ((InitializingBean)bean).afterPropertiesSet();
-        }
+        }*/
     }
 
     protected void clear() {

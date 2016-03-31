@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+    <bean id="jyp" class="jyp.bean.Jyp">
+        <constructor-arg ref="javajigi" />
+    </bean>
+
+    <bean id="javajigi" class="jyp.bean.Javajigi">
+        <constructor-arg ref="jyp" />
+    </bean>
+</beans>

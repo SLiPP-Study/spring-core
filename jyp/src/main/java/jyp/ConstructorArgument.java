@@ -5,13 +5,13 @@ package jyp;
  * @date 2016. 3. 30.
  */
 public class ConstructorArgument {
-    private String[] refNames;
+    private String refName;
 
-    public ConstructorArgument(String[] refBeanNames) {
-        this.refNames = refBeanNames;
+    public ConstructorArgument(String refBeanName) {
+        this.refName = refBeanName;
     }
 
-    public String[] getRefNames() {
-        return refNames;
+    public String getRefName() {
+        return refName;
     }
 }

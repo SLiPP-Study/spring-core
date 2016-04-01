@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -60,16 +61,15 @@ public abstract class AbstractBeanFactory implements BeanFactory {
 
             Object newlyCreatedBean;
 
-            ConstructorArgument constructorArgument = beanDefinition.getConstructorArgument();
-            if (constructorArgument == null) {
-                newlyCreatedBean = beanDefinition.getBeanClass().newInstance();
-            } else {
-                String[] refNames = constructorArgument.getRefNames();
-                Object[] refBeans = new Object[refNames.length];
-                Class[] refBeanClass = new Class[refNames.length];
+            ConstructorArguments constructorArguments = beanDefinition.getConstructorArguments();
+            if (constructorArguments != null && constructorArguments.hasConstructorArguments()) {
 
-                for (int i=0; i<refNames.length; i++) {
-                    Object refBean = getBean(refNames[i]);
+                List<ConstructorArgument> constructorList = constructorArguments.getConstructorArguments();
+                Object[] refBeans = new Object[constructorList.size()];
+                Class[] refBeanClass = new Class[constructorList.size()];
+
+                for (int i = 0; i < constructorList.size(); i++) {
+                    Object refBean = getBean(constructorList.get(i).getRefName());
                     refBeanClass[i] = refBean.getClass();
                     refBeans[i] = refBean;
                 }
@@ -77,6 +77,9 @@ public abstract class AbstractBeanFactory implements BeanFactory {
                 Class beanClass = beanDefinition.getBeanClass();
                 Constructor constructor = beanClass.getConstructor(refBeanClass);
                 newlyCreatedBean = constructor.newInstance(refBeans);
+
+            } else {
+                newlyCreatedBean = beanDefinition.getBeanClass().newInstance();
             }
 
             applyPropertyValues(beanDefinition, propertyValues, newlyCreatedBean, key);

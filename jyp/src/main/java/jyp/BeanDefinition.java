@@ -3,12 +3,13 @@ package jyp;
 public class BeanDefinition {
     private final Class clazz;
     private final PropertyValues propertyValues;
-    private final ConstructorArgument constructorArgument;
+    private final ConstructorArguments constructorArguments;
 
-    public BeanDefinition(Class clazz, PropertyValues propertyValues, ConstructorArgument constructorArgument) {
+    public BeanDefinition(Class clazz, PropertyValues propertyValues,
+            ConstructorArguments constructorArguments) {
         this.clazz = clazz;
         this.propertyValues = propertyValues;
-        this.constructorArgument = constructorArgument;
+        this.constructorArguments = constructorArguments;
     }
 
     public Class getBeanClass() {
@@ -19,7 +20,7 @@ public class BeanDefinition {
         return propertyValues;
     }
 
-    public ConstructorArgument getConstructorArgument() {
-        return constructorArgument;
+    public ConstructorArguments getConstructorArguments() {
+        return constructorArguments;
     }
 }

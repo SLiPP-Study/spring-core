@@ -23,4 +23,8 @@ public class BeanDefinition {
     public ConstructorArguments getConstructorArguments() {
         return constructorArguments;
     }
+
+    public boolean isCreateWithConstructor() {
+        return this.constructorArguments != null && this.constructorArguments.hasConstructorArguments();
+    }
 }

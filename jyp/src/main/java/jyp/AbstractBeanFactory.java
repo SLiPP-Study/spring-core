@@ -1,5 +1,9 @@
 package jyp;
 
+import jyp.beans.factory.BeanCurrentlyInCreationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -7,15 +11,16 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public abstract class AbstractBeanFactory implements BeanFactory {
 
+    private static final Object CURRENTLY_IN_CREATION = new Object();
+    protected final Log logger = LogFactory.getLog(getClass());
     private final BeanFactory parentBeanFactory;
     /**
      * Map of Bean objects, keyed by id attribute
      */
-    private Map<String, Object> beanHash = new HashMap();
+    private Map<String, Object> beanHash = new HashMap<>();
 
     public AbstractBeanFactory(BeanFactory parentBeanFactory) {
         this.parentBeanFactory = parentBeanFactory;
@@ -34,21 +39,46 @@ public abstract class AbstractBeanFactory implements BeanFactory {
     }
 
     private Object getBeanInternal(String key) {
-        if (key == null)
+        if (key == null) {
             throw new IllegalArgumentException("Bean name null is not allowed");
+        }
 
-        if (beanHash.containsKey(key)) {
-            return beanHash.get(key);
+        Object sharedInstance = beanHash.get(key);
+        if (sharedInstance != null) {
+            if (sharedInstance == CURRENTLY_IN_CREATION) {
+                throw new BeanCurrentlyInCreationException(
+                    key + " Requested bean is already currently in creation");
+            }
+            if (logger.isDebugEnabled()) {
+                logger.debug("returning cached object: " + key);
+            }
+            return sharedInstance;
+
         } else {
             BeanDefinition beanDefinition = getBeanDefinition(key);
             if (beanDefinition != null) {
-                Object newlyCreatedBean = createBean(key);
-                beanHash.put(key, newlyCreatedBean);
-                return newlyCreatedBean;
+
+                sharedInstance = beanHash.get(key);
+                if (sharedInstance == null) {
+                    if (logger.isInfoEnabled()) {
+                        logger.info("Creating shared instance of bean '" + key + "'");
+                    }
+                    this.beanHash.put(key, CURRENTLY_IN_CREATION);
+                    try {
+                        sharedInstance = createBean(key);
+                        this.beanHash.put(key, sharedInstance);
+                    } catch (BeanCurrentlyInCreationException e) {
+                        this.beanHash.remove(key);
+                        throw e;
+                    }
+                }
+
+                return sharedInstance;
             } else {
-                if (this.parentBeanFactory == null)
+                if (this.parentBeanFactory == null) {
                     throw new IllegalArgumentException(
                         "Cannot instantiate [bean name : " + key + "]; is not exist");
+                }
                 return parentBeanFactory.getBean(key);
             }
         }
@@ -61,9 +91,9 @@ public abstract class AbstractBeanFactory implements BeanFactory {
 
             Object newlyCreatedBean;
 
-            ConstructorArguments constructorArguments = beanDefinition.getConstructorArguments();
-            if (constructorArguments != null && constructorArguments.hasConstructorArguments()) {
+            if (beanDefinition.isCreateWithConstructor()) {
 
+                ConstructorArguments constructorArguments = beanDefinition.getConstructorArguments();
                 List<ConstructorArgument> constructorList = constructorArguments.getConstructorArguments();
                 Object[] refBeans = new Object[constructorList.size()];
                 Class[] refBeanClass = new Class[constructorList.size()];

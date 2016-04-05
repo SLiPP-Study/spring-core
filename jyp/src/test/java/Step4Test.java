@@ -1,9 +1,9 @@
-import junit.framework.Assert;
-import jyp.XmlBeanFactory;
-import jyp.bean.SpringCoreTeam;
+import static junit.framework.Assert.assertEquals;
+
 import org.junit.Test;
 
-import static junit.framework.Assert.assertEquals;
+import jyp.XmlBeanFactory;
+import jyp.bean.SpringCoreTeam;
 
 /**
  * @author jinyoung.park89
@@ -11,9 +11,9 @@ import static junit.framework.Assert.assertEquals;
  */
 public class Step4Test {
 
-    // Todo: property에도 ref 지정 가능하도록
+    // property에도 ref 지정 가능하도록
     @Test
-    public void test_생성자순환참조() {
+    public void test_property_ref() {
         XmlBeanFactory beanFactory = new XmlBeanFactory(ClassLoader.getSystemResourceAsStream("step4.xml"));
         SpringCoreTeam coreTeam1 = (SpringCoreTeam) beanFactory.getBean("coreTeam1");
 

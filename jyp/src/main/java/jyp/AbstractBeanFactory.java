@@ -144,17 +144,25 @@ public abstract class AbstractBeanFactory implements BeanFactory {
             try {
                 Field field = clazz.getDeclaredField(property.getName());
                 String propertyName = property.getName();
+                Object value = property.getValue();
+                String ref = property.getRef();
 
                 Method method = clazz.getMethod(
                     "set" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1),
                     new Class[] {field.getType()});
 
-                //Integer와 String 필드에 대해서만 동작
-                if ("java.lang.Integer".equals(field.getType().getName())) {
-                    method.invoke(bean, Integer.parseInt(property.getValue().toString()));
+                if (ref != null) {
+                    Object refBean = getBean(ref);
+                    method.invoke(bean, refBean);
                 } else {
-                    method.invoke(bean, property.getValue().toString());
+                    //Integer와 String 필드에 대해서만 동작
+                    if ("java.lang.Integer".equals(field.getType().getName())) {
+                        method.invoke(bean, Integer.parseInt(value.toString()));
+                    } else {
+                        method.invoke(bean, value.toString());
+                    }
                 }
+
             } catch (NoSuchFieldException e) {
                 e.printStackTrace();
                 throw new IllegalArgumentException("Cannot instantiate [bean name : " + beanName

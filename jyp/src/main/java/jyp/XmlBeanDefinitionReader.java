@@ -95,15 +95,37 @@ public class XmlBeanDefinitionReader implements BeanDefinitionReader {
 
     private PropertyValue createPropertyValue(Element propElement) {
         String propertyName = propElement.getAttribute(NAME_ATTRIBUTE);
-        if (propertyName == null || "".equals(propertyName))
+        if (propertyName == null || "".equals(propertyName)) {
             throw new IllegalArgumentException("Property without a name");
-        return new PropertyValue(propertyName, getValue(propElement));
+        }
+
+        Object value = getValue(propElement);
+        String ref = getRef(propElement);
+
+        if (value != null && ref != null) {
+            throw new IllegalArgumentException(
+                "Property has only one of value and ref, value: " + value + ", ref: " + ref);
+        }
+
+        return new PropertyValue(propertyName, value, ref);
     }
 
     private Object getValue(Element propElement) {
         //nested value, 예를들어 List, Map등의 판별을 통해 데이터를 만들어내야 하지만
         //학습을 위한 구현이므로 하나의 데이터를 저장하게끔 구현한다
-        return propElement.getAttribute(VALUE_ATTRIBUTE);
+        String valueAttribute = propElement.getAttribute(VALUE_ATTRIBUTE);
+        if (valueAttribute == null || valueAttribute.isEmpty()) {
+            return null;
+        }
+        return valueAttribute;
+    }
+
+    private String getRef(Element propElement) {
+        String refAttribute = propElement.getAttribute(REF_ATTRIBUTE);
+        if (refAttribute == null || refAttribute.isEmpty()) {
+            return null;
+        }
+        return refAttribute;
     }
 
     private PropertyValues createPropertyValues(Element beanElement) {

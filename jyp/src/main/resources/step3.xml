@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans>
-    <bean id="jyp" class="jyp.bean.Jyp">
-        <constructor-arg ref="javajigi" />
+    <bean id="service1" class="jyp.bean.Service1">
+        <constructor-arg ref="service2"/>
     </bean>
 
-    <bean id="javajigi" class="jyp.bean.Javajigi">
-        <constructor-arg ref="jyp" />
+    <bean id="service2" class="jyp.bean.Service2">
+        <constructor-arg ref="service3"/>
     </bean>
+
+    <bean id="service3" class="jyp.bean.Service3">
+        <constructor-arg ref="service1"/>
+    </bean>
+
 </beans>

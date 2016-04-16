@@ -21,7 +21,6 @@ public class AppConfig {
 
 	@Bean
 	@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-	//			proxyMode = ScopedProxyMode.INTERFACES)
 	public Member newMember() {
 		return new NewMember();
 	}

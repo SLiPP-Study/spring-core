@@ -10,9 +10,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static junit.framework.TestCase.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * Created by woojin on 2016. 4. 16..
@@ -40,7 +38,11 @@ public class MemberTest implements ApplicationContextAware {
 	public void 싱글톤_빈_확인_테스트() throws Exception {
 		Member currentMember1 = (Member) applicationContext.getBean(CURRENT_MEMBER);
 		Member currentMember2 = (Member) applicationContext.getBean(CURRENT_MEMBER);
-		testBeanScopeType(currentMember1, currentMember2, true);
+		assertNotNull(currentMember1);
+		assertNotNull(currentMember2);
+
+		System.out.format("bean 1: %s, bean 2: %s\n", currentMember1, currentMember2);
+		assertTrue(currentMember1.equals(currentMember2));
 	}
 
 	@Test
@@ -48,19 +50,11 @@ public class MemberTest implements ApplicationContextAware {
 		Member newMember1 = (Member) applicationContext.getBean(NEW_MEMBER);
 		Member newMember2 = (Member) applicationContext.getBean(NEW_MEMBER);
 
-		testBeanScopeType(newMember1, newMember2, false);
+		assertNotNull(newMember1);
+		assertNotNull(newMember2);
+		System.out.format("bean 1: %s, bean 2: %s\n", newMember1, newMember2);
+
+		assertFalse(newMember1.equals(newMember2));
 	}
 
-	private void testBeanScopeType(final Member member1, final Member member2, final boolean isSingleton) {
-		assertNotNull(member1);
-		assertNotNull(member2);
-
-		System.out.format("bean 1: %s, bean 2: %s\n", member1, member2);
-
-		if (isSingleton) {
-			assertEquals(member1, member2);
-		} else {
-			assertNotEquals(member1, member2);
-		}
-	}
 }

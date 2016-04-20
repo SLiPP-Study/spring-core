@@ -14,11 +14,28 @@
         <constructor-arg value="이시훈"/>
     </bean>
 
-    <bean id="memberBySession" class="net.slipp.week6.beans.NewMember" scope="session">
-        <qualifier value="session"/>
-        <constructor-arg value="이수훈"/>
+    <bean id="memberByRequest" class="net.slipp.week6.beans.NewMember" scope="request">
+        <qualifier value="request"/>
+        <constructor-arg value="조현우"/>
         <aop:scoped-proxy proxy-target-class="false"/>
     </bean>
+
+    <bean id="memberBySession" class="net.slipp.week6.beans.NewMember" scope="session">
+        <qualifier value="session"/>
+        <constructor-arg value="박진영"/>
+        <aop:scoped-proxy proxy-target-class="false"/>
+    </bean>
+
+    <bean id="memberMap" class="java.util.HashMap">
+    <constructor-arg>
+        <map key-type="java.lang.String" value-type="net.slipp.week6.beans.Member">
+            <entry key="singleton" value-ref="currentMember" />
+            <entry key="prototype" value-ref="newMember" />
+            <entry key="request" value-ref="memberByRequest" />
+            <entry key="session" value-ref="memberBySession" />
+        </map>
+    </constructor-arg>
+</bean>
 
     <bean class="net.slipp.week6.beans.StudyMeeting">
     </bean>

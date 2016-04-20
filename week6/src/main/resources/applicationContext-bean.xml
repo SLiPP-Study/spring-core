@@ -12,7 +12,6 @@
     <bean id="newMember" class="net.slipp.week6.beans.NewMember" scope="prototype">
         <qualifier value="prototype"/>
         <constructor-arg value="이시훈"/>
-        <aop:scoped-proxy proxy-target-class="false"/>
     </bean>
 
     <bean id="memberByRequest" class="net.slipp.week6.beans.NewMember" scope="request">

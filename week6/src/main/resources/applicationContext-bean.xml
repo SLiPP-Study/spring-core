@@ -12,6 +12,7 @@
     <bean id="newMember" class="net.slipp.week6.beans.NewMember" scope="prototype">
         <qualifier value="prototype"/>
         <constructor-arg value="이시훈"/>
+        <aop:scoped-proxy proxy-target-class="false"/>
     </bean>
 
     <bean id="memberByRequest" class="net.slipp.week6.beans.NewMember" scope="request">
@@ -26,17 +27,22 @@
         <aop:scoped-proxy proxy-target-class="false"/>
     </bean>
 
-    <bean id="memberMap" class="java.util.HashMap">
-    <constructor-arg>
-        <map key-type="java.lang.String" value-type="net.slipp.week6.beans.Member">
-            <entry key="singleton" value-ref="currentMember" />
-            <entry key="prototype" value-ref="newMember" />
-            <entry key="request" value-ref="memberByRequest" />
-            <entry key="session" value-ref="memberBySession" />
-        </map>
-    </constructor-arg>
-</bean>
-
-    <bean class="net.slipp.week6.beans.StudyMeeting">
+    <bean id="aloneMember" class="net.slipp.week6.beans.Outlier" scope="request">
+        <qualifier value="outlier"/>
+        <constructor-arg value="홍길동"/>
+        <aop:scoped-proxy proxy-target-class="true"/> <!-- 구상 클래스는 CGLib로 프록시 함-->
     </bean>
+
+    <bean id="memberMap" class="java.util.HashMap">
+        <constructor-arg>
+            <map key-type="java.lang.String" value-type="java.lang.Object">
+                <entry key="singleton" value-ref="currentMember"/>
+                <entry key="prototype" value-ref="newMember"/>
+                <entry key="request" value-ref="memberByRequest"/>
+                <entry key="session" value-ref="memberBySession"/>
+                <entry key="outlier" value-ref="aloneMember"/>
+            </map>
+        </constructor-arg>
+    </bean>
+
 </beans>

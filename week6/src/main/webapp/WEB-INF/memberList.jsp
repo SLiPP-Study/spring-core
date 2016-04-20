@@ -46,6 +46,11 @@
             <td>${members.get("session")}</td>
             <td>${members.get("session").name}</td>
         </tr>
+        <tr>
+            <td>request(proxy)</td>
+            <td>${members.get("outlier")}</td>
+            <td>${members.get("outlier").name}</td>
+        </tr>
         </tbody>
     </table>
     <div clas="well right">Current Time: <%= new java.util.Date()%>

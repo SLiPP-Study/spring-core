@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+    <bean id="javajigi" class="bean.Javajigi"/>
+    <bean id="jyp" class="bean.Jyp"/>
+    <bean id="woniper" class="bean.Woniper"/>
+    <bean id="woojin" class="bean.Woojin"/>
+    <bean id="yoonsung" class="bean.Yoonsung"/>
+</beans>

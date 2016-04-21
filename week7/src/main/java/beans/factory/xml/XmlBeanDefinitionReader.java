@@ -104,8 +104,8 @@ public class XmlBeanDefinitionReader implements BeanDefinitionReader {
     }
 
     private Object getValue(Element propElement) {
-        //nested value, ?��를들?�� List, Map?��?�� ?��별을 ?��?�� ?��?��?���? 만들?��?��?�� ?���?�?
-        //?��?��?�� ?��?�� 구현?���?�? ?��?��?�� ?��?��?���? ???��?��게끔 구현?��?��
+        //nested value, 예를들어 List, Map등의 판별을 통해 데이터를 만들어내야 하지만
+        //학습을 위한 구현이므로 하나의 데이터를 저장하게끔 구현한다
         return propElement.getAttribute(VALUE_ATTRIBUTE);
     }
 

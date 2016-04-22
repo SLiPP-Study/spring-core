@@ -2,6 +2,7 @@ package beans.factory.support;
 
 import beans.PropertyValue;
 import beans.PropertyValues;
+import beans.factory.BeanCurrentlyInCreationException;
 import beans.factory.BeanFactory;
 import beans.factory.config.BeanDefinition;
 import core.*;
@@ -15,6 +16,8 @@ import java.util.Map;
 
 public abstract class AbstractBeanFactory implements BeanFactory {
 
+    // '생성중' 이라는 마킹을 위해 선언된 변수
+    private static final Object CURRENTLY_IN_CREATION = new Object();
     private final BeanFactory parentBeanFactory;
     /**
      * Map of Bean objects, keyed by id attribute
@@ -37,24 +40,30 @@ public abstract class AbstractBeanFactory implements BeanFactory {
         return getBeanInternal(key);
     }
 
-    private Object getBeanInternal(String key) throws NoSuchMethodException, SecurityException,
+    private Object getBeanInternal(String name) throws NoSuchMethodException, SecurityException,
             IllegalArgumentException, InvocationTargetException {
-        if (key == null)
+
+        if (name == null)
             throw new IllegalArgumentException("Bean name null is not allowed");
 
-        if (beanHash.containsKey(key)) {
-            return beanHash.get(key);
+        if (beanHash.containsKey(name)) {
+            Object object = beanHash.get(name);
+            // Todo: 1. beanHash 맵에서 꺼낸 object가 '생성중(CURRENTLY_IN_CREATION)'이라고 마킹되어 있는 경우 특정 에러를 빌생시킵니다.
+
+            return object;
         } else {
-            BeanDefinition beanDefinition = getBeanDefinition(key);
+            BeanDefinition beanDefinition = getBeanDefinition(name);
             if (beanDefinition != null) {
-                Object newlyCreatedBean = createBean(beanDefinition, key);
-                beanHash.put(key, newlyCreatedBean);
+                // Todo: 2. 새로운 bean을 생성하기 전에 일단 '생성중(CURRENTLY_IN_CREATION)' 이라고 마킹을 합니다.
+
+                Object newlyCreatedBean = createBean(beanDefinition, name);
+                beanHash.put(name, newlyCreatedBean); // 3. '생성중(CURRENTLY_IN_CREATION)' 마킹을 지우면서 실제 생성된 객체를 저장합니다.
                 return newlyCreatedBean;
             } else {
                 if (this.parentBeanFactory == null)
                     throw new IllegalArgumentException(
-                        "Cannot instantiate [bean name : " + key + "]; is not exist");
-                return parentBeanFactory.getBean(key);
+                        "Cannot instantiate [bean name : " + name + "]; is not exist");
+                return parentBeanFactory.getBean(name);
             }
         }
     }

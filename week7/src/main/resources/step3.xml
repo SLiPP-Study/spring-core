@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans>
+    <!-- service1->service2->service3->service1 순환 참조 구조 -->
+
     <bean id="service1" class="bean.Service1">
         <constructor-arg ref="service2"/>
     </bean>

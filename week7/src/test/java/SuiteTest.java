@@ -8,7 +8,8 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-    Step1Test.class
+    Step1Test.class,
+    Step2Test.class
 })
 public class SuiteTest {
 }

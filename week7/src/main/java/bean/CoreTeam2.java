@@ -25,7 +25,7 @@ public class CoreTeam2 implements SpringCoreTeam {
         return count;
     }
 
-    public String getMeberNames() {
+    public String getMemberNames() {
         String names = "";
         if (jyp != null) {
             names += jyp.getName() + " ";

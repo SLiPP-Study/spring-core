@@ -35,8 +35,7 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory
         return beanDefinitionHash.size();
     }
 
-    protected void preInstantiate() throws NoSuchMethodException, SecurityException, IllegalArgumentException,
-            InvocationTargetException {
+    protected void preInstantiate() {
         String[] beanNames = getBeanDefinitionNames();
         for (int i = 0; i < getBeanDefinitionCount(); i++) {
             getBean(beanNames[i]);

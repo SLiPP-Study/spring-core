@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans>
-    <bean id="javajigi" class="bean.Javajigi"/>
-    <bean id="jyp" class="bean.Jyp"/>
-    <bean id="woniper" class="bean.Woniper"/>
-    <bean id="woojin" class="bean.Woojin"/>
-    <bean id="yoonsung" class="bean.Yoonsung"/>
+    <!-- service1->service2->service3 순환 참조 구조 -->
+
+    <bean id="service1" class="bean.Service1">
+        <constructor-arg ref="service2"/>
+    </bean>
+
+    <bean id="service2" class="bean.Service2">
+        <constructor-arg ref="service3"/>
+    </bean>
+
+    <bean id="service3" class="bean.Service3">
+        <constructor-arg ref="service1"/>
+    </bean>
+
 </beans>

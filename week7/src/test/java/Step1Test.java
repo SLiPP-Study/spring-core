@@ -31,14 +31,8 @@ public class Step1Test {
      * 아래의 test_생성자순환참조() 테스트과 통과되도록 AbstractBeanFactory Class를 수정해보세요!!
      */
 
-    @Test
-    public void test_생성자순환참조_StackOverflowError_에러가납니다()
-            throws NoSuchMethodException, InvocationTargetException {
-        XmlBeanFactory beanFactory = new XmlBeanFactory(ClassLoader.getSystemResourceAsStream("step3.xml"));
-    }
-
     @Test(expected = BeanCurrentlyInCreationException.class)
     public void test_생성자순환참조() throws NoSuchMethodException, InvocationTargetException {
-        test_생성자순환참조_StackOverflowError_에러가납니다();
+        XmlBeanFactory beanFactory = new XmlBeanFactory(ClassLoader.getSystemResourceAsStream("step3.xml"));
     }
 }

@@ -49,13 +49,15 @@ public abstract class AbstractBeanFactory implements BeanFactory {
         if (beanHash.containsKey(name)) {
             Object object = beanHash.get(name);
             // Todo: 1. beanHash 맵에서 꺼낸 object가 '생성중(CURRENTLY_IN_CREATION)'이라고 마킹되어 있는 경우 특정 에러를 빌생시킵니다.
-
+            if (object == CURRENTLY_IN_CREATION) {
+                throw new BeanCurrentlyInCreationException("current bean name: " + name);
+            }
             return object;
         } else {
             BeanDefinition beanDefinition = getBeanDefinition(name);
             if (beanDefinition != null) {
                 // Todo: 2. 새로운 bean을 생성하기 전에 일단 '생성중(CURRENTLY_IN_CREATION)' 이라고 마킹을 합니다.
-
+                this.beanHash.put(name, CURRENTLY_IN_CREATION);
                 Object newlyCreatedBean = createBean(beanDefinition, name);
                 beanHash.put(name, newlyCreatedBean); // 3. '생성중(CURRENTLY_IN_CREATION)' 마킹을 지우면서 실제 생성된 객체를 저장합니다.
                 return newlyCreatedBean;

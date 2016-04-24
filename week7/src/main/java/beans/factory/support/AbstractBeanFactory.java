@@ -30,34 +30,31 @@ public abstract class AbstractBeanFactory implements BeanFactory {
 
     public abstract BeanDefinition getBeanDefinition(String key);
 
-    public <T> T getBean(String key, Class<T> clazz) throws NoSuchMethodException, SecurityException,
-            IllegalArgumentException, InvocationTargetException {
+    public <T> T getBean(String key, Class<T> clazz) {
         return (T)getBean(key);
     }
 
-    public Object getBean(String key) throws NoSuchMethodException, SecurityException, IllegalArgumentException,
-            InvocationTargetException {
+    public Object getBean(String key) {
         return getBeanInternal(key);
     }
 
-    private Object getBeanInternal(String name) throws NoSuchMethodException, SecurityException,
-            IllegalArgumentException, InvocationTargetException {
+    private Object getBeanInternal(String name) {
 
         if (name == null)
             throw new IllegalArgumentException("Bean name null is not allowed");
 
         if (beanHash.containsKey(name)) {
             Object object = beanHash.get(name);
-            // Todo: 1. beanHash 맵에서 꺼낸 object가 '생성중(CURRENTLY_IN_CREATION)'이라고 마킹되어 있는 경우 특정 에러를 빌생시킵니다.
-
+            if (object == CURRENTLY_IN_CREATION) {
+                throw new BeanCurrentlyInCreationException("current bean name: " + name);
+            }
             return object;
         } else {
             BeanDefinition beanDefinition = getBeanDefinition(name);
             if (beanDefinition != null) {
-                // Todo: 2. 새로운 bean을 생성하기 전에 일단 '생성중(CURRENTLY_IN_CREATION)' 이라고 마킹을 합니다.
-
+                this.beanHash.put(name, CURRENTLY_IN_CREATION);
                 Object newlyCreatedBean = createBean(beanDefinition, name);
-                beanHash.put(name, newlyCreatedBean); // 3. '생성중(CURRENTLY_IN_CREATION)' 마킹을 지우면서 실제 생성된 객체를 저장합니다.
+                beanHash.put(name, newlyCreatedBean);
                 return newlyCreatedBean;
             } else {
                 if (this.parentBeanFactory == null)
@@ -68,8 +65,7 @@ public abstract class AbstractBeanFactory implements BeanFactory {
         }
     }
 
-    private Object createBean(BeanDefinition beanDefinition, String beanName) throws NoSuchMethodException,
-            SecurityException, IllegalArgumentException, InvocationTargetException {
+    private Object createBean(BeanDefinition beanDefinition, String beanName) {
         try {
             //BeanDefinition beanDefinition = getBeanDefinition(key);
             ConstructorArguments constructorArguments = beanDefinition.getConstructorArguments();
@@ -96,11 +92,11 @@ public abstract class AbstractBeanFactory implements BeanFactory {
                 newlyCreatedBean = constructor.newInstance(instanceArgs);
             } else {
                 newlyCreatedBean = beanDefinition.getBeanClass().newInstance();
-                ;
             }
 
             applyPropertyValues(beanDefinition, propertyValues, newlyCreatedBean, beanName);
-            callLifecycleMethodsIfNecessary(newlyCreatedBean);
+            newlyCreatedBean = callLifecycleMethodsIfNecessary(newlyCreatedBean, beanName);// Bean Life Cycle 처리 메소드 호출
+
             return newlyCreatedBean;
         } catch (InstantiationException e) {
             e.printStackTrace();
@@ -110,6 +106,9 @@ public abstract class AbstractBeanFactory implements BeanFactory {
             e.printStackTrace();
             throw new IllegalArgumentException("Cannot instantiate [bean name : " + beanName
                 + "]; has class definition changed? Is there a public constructor?");
+        } catch (NoSuchMethodException | InvocationTargetException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("Cannot instantiate [bean name: " + beanName + "]");
         }
     }
 
@@ -154,13 +153,31 @@ public abstract class AbstractBeanFactory implements BeanFactory {
         }
     }
 
-    private void callLifecycleMethodsIfNecessary(Object bean) {
+    private Object callLifecycleMethodsIfNecessary(Object bean, String beanName) {
         //        if (bean instanceof step4.InitializingBean) {
         //            ((step4.InitializingBean) bean).afterPropertiesSet();
         //        }
+
+        // 1. BeanNameAware's setBeanName
+        // Todo: bean이 BeanNameAware 인터페이스를 구현한 경우 처리, beanName을 bean의 구현 메소드(setBeanName)에 넘겨준다.
+
+        // 2. BeanFactoryAware's setBeanFactory
+        // Todo: bean이 BeanFactoryAware 인터페이스를 구현한 경우 처리, 현재 beanFactory(this)를 bean의 구현 메소드(setBeanName)에 넘겨준다.
+
+        // 4. postProcessBeforeInitialization methods of BeanPostProcessors
+        // Todo: BeanPostProcessor 인터페이스를 구현한 클래스가 등록되어 있는 경우 처리 (postProcessorBeforeInitialization)
+
+        // 5. InitializingBean's afterPropertiesSet
+        // Todo: bean이 InitializingBean 인터페이스를 구현한 경우 처리, bean의 구현 메소드(afterPropertiesSet)를 호출한다.
+
+        // 4. postProcessBeforeInitialization methods of BeanPostProcessors
+        // Todo: BeanPostProcessor 인터페이스를 구현한 클래스가 등록되어 있는 경우 처리 (postProcessorAfterInitialization)
+
+        return bean;
     }
 
-    public void clearBeanHash() {
-        beanHash.clear();
+    public void destroyBean(String beanName, Object bean) {
+        // 6. DisposableBean's destroy
+        // Todo:  bean이 DisposableBean 인터페이스를 구현한 경우 처리
     }
 }

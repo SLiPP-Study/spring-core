@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans>
-    <bean id="service1" class="bean.Service1">
-        <constructor-arg ref="service2"/>
+
+    <bean id="jyp" class="bean.Jyp">
     </bean>
 
-    <bean id="service2" class="bean.Service2">
-        <constructor-arg ref="service3"/>
+    <bean id="woniper" class="bean.Woniper"></bean>
+
+    <bean id="javajigi" class="bean.Javajigi"/>
+    <bean id="coreTeam1" class="bean.CoreTeam1">
+        <constructor-arg ref="javajigi"/>
     </bean>
 
-    <bean id="service3" class="bean.Service3">
-        <constructor-arg ref="service1"/>
-    </bean>
+    <bean id="woojin" class="bean.Woojin"></bean>
+    <bean id="yoonsung" class="bean.Yoonsung"></bean>
 
+
+    <bean id="arahansa" class="bean.Arahansa" scope="prototype"></bean>
 </beans>

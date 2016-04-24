@@ -17,7 +17,7 @@ public class CoreTeam3 implements SpringCoreTeam {
         return members.size();
     }
 
-    public String getMeberNames() {
+    public String getMemberNames() {
 
         String names = "";
         for (SpringCoreMember springCoreMember : members) {

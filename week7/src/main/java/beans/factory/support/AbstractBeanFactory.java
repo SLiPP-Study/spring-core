@@ -5,13 +5,16 @@ import beans.PropertyValues;
 import beans.factory.BeanCurrentlyInCreationException;
 import beans.factory.BeanFactory;
 import beans.factory.config.BeanDefinition;
+import beans.factory.config.BeanPostProcessor;
 import core.*;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractBeanFactory implements BeanFactory {
@@ -19,6 +22,7 @@ public abstract class AbstractBeanFactory implements BeanFactory {
     // '생성중' 이라는 마킹을 위해 선언된 변수
     private static final Object CURRENTLY_IN_CREATION = new Object();
     private final BeanFactory parentBeanFactory;
+    private final List<BeanPostProcessor> beanPostProcessors = new ArrayList<>();
     /**
      * Map of Bean objects, keyed by id attribute
      */
@@ -179,5 +183,9 @@ public abstract class AbstractBeanFactory implements BeanFactory {
     public void destroyBean(String beanName, Object bean) {
         // 6. DisposableBean's destroy
         // Todo:  bean이 DisposableBean 인터페이스를 구현한 경우 처리
+    }
+
+    public void addBeanPostProcessor(BeanPostProcessor beanPostProcessor) {
+        this.beanPostProcessors.add(beanPostProcessor);
     }
 }

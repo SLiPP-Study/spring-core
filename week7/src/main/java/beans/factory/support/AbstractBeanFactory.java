@@ -25,7 +25,7 @@ public abstract class AbstractBeanFactory implements BeanFactory {
     /**
      * Map of Bean objects, keyed by id attribute
      */
-    private Map beanHash = new HashMap();
+    private Map<String, Object> singletonCache = new HashMap<>(); // beanHash 라는 변수 이름을 singletonCache 라고 변경함.
 
     public AbstractBeanFactory(BeanFactory parentBeanFactory) {
         this.parentBeanFactory = parentBeanFactory;
@@ -41,23 +41,32 @@ public abstract class AbstractBeanFactory implements BeanFactory {
         return getBeanInternal(key);
     }
 
+    /**
+     * Todo: getBeanInternal 메소드를 리팩토링 해보세요
+     * 1. 순환 참조 처리를 하면서 (순환 참조일 경우 BeanCurrentlyInCreationException 발생)
+     * 2. beanDefinition의 scope 설정에 따라서 적절한 처리를 해야함
+     * 3. 현재의 beanFactory에서 bean을 가져올 수 없을 경우 parentBeanFactory에서 가져와야 함
+     *
+     */
     private Object getBeanInternal(String name) {
 
         if (name == null)
             throw new IllegalArgumentException("Bean name null is not allowed");
 
-        if (beanHash.containsKey(name)) {
-            Object object = beanHash.get(name);
+        if (singletonCache.containsKey(name)) {
+            Object object = singletonCache.get(name);
             if (object == CURRENTLY_IN_CREATION) {
                 throw new BeanCurrentlyInCreationException("current bean name: " + name);
             }
             return object;
         } else {
             BeanDefinition beanDefinition = getBeanDefinition(name);
+            // Todo: beanDefinition:singleton 설정인 경우 처리, singletonCache에 저장한다.
+
             if (beanDefinition != null) {
-                this.beanHash.put(name, CURRENTLY_IN_CREATION);
+                this.singletonCache.put(name, CURRENTLY_IN_CREATION);
                 Object newlyCreatedBean = createBean(beanDefinition, name);
-                beanHash.put(name, newlyCreatedBean);
+                singletonCache.put(name, newlyCreatedBean);
                 return newlyCreatedBean;
             } else {
                 if (this.parentBeanFactory == null)
@@ -65,6 +74,8 @@ public abstract class AbstractBeanFactory implements BeanFactory {
                         "Cannot instantiate [bean name : " + name + "]; is not exist");
                 return parentBeanFactory.getBean(name);
             }
+
+            // Todo: beanDefinition:singleton 설정이 아닌 경우 처리, singletonCache에 저장하지 않고 매번 createBean 호출
         }
     }
 

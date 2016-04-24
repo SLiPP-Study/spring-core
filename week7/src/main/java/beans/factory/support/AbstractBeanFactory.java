@@ -46,7 +46,7 @@ public abstract class AbstractBeanFactory implements BeanFactory {
      * 1. 순환 참조 처리를 하면서 (순환 참조일 경우 BeanCurrentlyInCreationException 발생)
      * 2. beanDefinition의 scope 설정에 따라서 적절한 처리를 해야함
      * 3. 현재의 beanFactory에서 bean을 가져올 수 없을 경우 parentBeanFactory에서 가져와야 함
-     *
+     * 4. singletonCache map 동기화 처리
      */
     private Object getBeanInternal(String name) {
 

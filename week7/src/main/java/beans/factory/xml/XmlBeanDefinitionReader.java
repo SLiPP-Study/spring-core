@@ -92,7 +92,11 @@ public class XmlBeanDefinitionReader implements BeanDefinitionReader {
      */
     private String readScopeValue(Element element) {
         // Todo: DOM API 를 사용해서 element 를 파싱한다.
-        return null;
+        String scopeValue = element.getAttribute(SCOPE_ATTRIBUTE);
+        if (scopeValue == null || "".equals(scopeValue)) {
+            return BeanDefinition.SCOPE_SINGLETON;
+        }
+        return scopeValue;
     }
 
     private ConstructorArguments createConstructorArguments(Element beanElement) {
@@ -146,7 +150,7 @@ public class XmlBeanDefinitionReader implements BeanDefinitionReader {
         try {
             // Todo: BeanDefinition 생성자를 수정하여 파라미터로 넘겨받은 scope를 생성자에 넘겨준다.
             return new BeanDefinition(id, Class.forName(classname, true, classLoader), constructorArguments,
-                propertyValues);
+                propertyValues, scope);
         } catch (ClassNotFoundException e) {
             throw new UnsupportedOperationException(
                 "Error creating bean with name [" + id + "]: class '" + classname + "' not found", e);

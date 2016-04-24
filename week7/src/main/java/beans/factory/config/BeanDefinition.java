@@ -5,9 +5,9 @@ import beans.PropertyValues;
 
 public class BeanDefinition {
 
-    private static final String SCOPE_SINGLETON = "singleton";
+    public static final String SCOPE_SINGLETON = "singleton";
 
-    private static final String SCOPE_PROTOTYPE = "prototype";
+    public static final String SCOPE_PROTOTYPE = "prototype";
 
     private final String id;
     private final Class clazz;
@@ -17,11 +17,12 @@ public class BeanDefinition {
     private String scope = SCOPE_SINGLETON; // Bean Scope에 관한 특별한 설정이 없는 경우 singleton으로 관리 된다.
 
     public BeanDefinition(String id, Class clazz, ConstructorArguments constructorArguments,
-            PropertyValues propertyValues) {
+            PropertyValues propertyValues, String scope) {
         this.id = id;
         this.clazz = clazz;
         this.constructorArguments = constructorArguments;
         this.propertyValues = propertyValues;
+        this.scope = scope;
     }
 
     public String getId() {

@@ -50,32 +50,38 @@ public abstract class AbstractBeanFactory implements BeanFactory {
      */
     private Object getBeanInternal(String name) {
 
-        if (name == null)
+        if (name == null) {
             throw new IllegalArgumentException("Bean name null is not allowed");
+        }
 
-        if (singletonCache.containsKey(name)) {
-            Object object = singletonCache.get(name);
-            if (object == CURRENTLY_IN_CREATION) {
-                throw new BeanCurrentlyInCreationException("current bean name: " + name);
+        Object instance = singletonCache.get(name);
+        if (instance != null) {
+            if (instance == CURRENTLY_IN_CREATION) {
+                throw new BeanCurrentlyInCreationException(
+                    name + " Requested bean is already currently in creation");
             }
-            return object;
+            return instance;
         } else {
             BeanDefinition beanDefinition = getBeanDefinition(name);
-            // Todo: beanDefinition:singleton 설정인 경우 처리, singletonCache에 저장한다.
+            if (beanDefinition.isSingleton()) {
+                synchronized (this.singletonCache) {
+                    instance = singletonCache.get(name);
+                    if (instance == null) {
+                        singletonCache.put(name, CURRENTLY_IN_CREATION);
 
-            if (beanDefinition != null) {
-                this.singletonCache.put(name, CURRENTLY_IN_CREATION);
-                Object newlyCreatedBean = createBean(beanDefinition, name);
-                singletonCache.put(name, newlyCreatedBean);
-                return newlyCreatedBean;
+                        try {
+                            instance = createBean(beanDefinition, name);
+                            singletonCache.put(name, instance);
+                        } catch (Exception ex) {
+                            singletonCache.remove(name);
+                            throw ex;
+                        }
+                    }
+                }
+                return instance;
             } else {
-                if (this.parentBeanFactory == null)
-                    throw new IllegalArgumentException(
-                        "Cannot instantiate [bean name : " + name + "]; is not exist");
-                return parentBeanFactory.getBean(name);
+                return createBean(beanDefinition, name);
             }
-
-            // Todo: beanDefinition:singleton 설정이 아닌 경우 처리, singletonCache에 저장하지 않고 매번 createBean 호출
         }
     }
 

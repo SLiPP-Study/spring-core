@@ -29,6 +29,7 @@ public class XmlBeanDefinitionReader implements BeanDefinitionReader {
     private static final String NAME_ATTRIBUTE = "name";
     private static final String VALUE_ATTRIBUTE = "value";
     private static final String REF_ATTRIBUTE = "ref";
+    private static final String SCOPE_ATTRIBUTE = "scope";
 
     private final BeanDefinitionRegistry beanDefinitionRegistry;
 
@@ -77,9 +78,21 @@ public class XmlBeanDefinitionReader implements BeanDefinitionReader {
             throw new IllegalArgumentException("Bean without id attribute");
 
         ConstructorArguments constructorArguments = createConstructorArguments(element);
+        String scope = readScopeValue(element);
         PropertyValues propertyValues = createPropertyValues(element);
-        BeanDefinition beanDefinition = createBeanDefinition(element, id, constructorArguments, propertyValues);
+        BeanDefinition beanDefinition = createBeanDefinition(element, id, constructorArguments, propertyValues,
+            scope);
         beanDefinitionRegistry.registerBeanDefinition(id, beanDefinition);
+    }
+
+    /**
+     * element에 scope attribute 가 있는 경우 이를 읽어서 리턴한다.
+     * @param element
+     * @return
+     */
+    private String readScopeValue(Element element) {
+        // Todo: DOM API 를 사용해서 element 를 파싱한다.
+        return null;
     }
 
     private ConstructorArguments createConstructorArguments(Element beanElement) {
@@ -124,12 +137,14 @@ public class XmlBeanDefinitionReader implements BeanDefinitionReader {
     private BeanDefinition createBeanDefinition(Element element,
                                                 String id,
                                                 ConstructorArguments constructorArguments,
-                                                PropertyValues propertyValues) {
+                                                PropertyValues propertyValues,
+                                                String scope) {
         if (!element.hasAttribute(CLASS_ATTRIBUTE))
             throw new IllegalArgumentException("Bean without class attribute");
         String classname = element.getAttribute(CLASS_ATTRIBUTE);
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         try {
+            // Todo: BeanDefinition 생성자를 수정하여 파라미터로 넘겨받은 scope를 생성자에 넘겨준다.
             return new BeanDefinition(id, Class.forName(classname, true, classLoader), constructorArguments,
                 propertyValues);
         } catch (ClassNotFoundException e) {

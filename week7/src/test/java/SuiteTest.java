@@ -10,6 +10,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
     Step1Test.class,
     Step2Test.class,
+    Step3Test.class
 })
 public class SuiteTest {
 }

@@ -1,44 +1,65 @@
-import beans.factory.BeanCurrentlyInCreationException;
-import beans.factory.xml.XmlBeanFactory;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
+import bean.Arahansa;
+import org.junit.Before;
 import org.junit.Test;
 
-import java.lang.reflect.InvocationTargetException;
+import bean.Yoonsung;
+import beans.factory.BeanFactory;
+import beans.factory.xml.XmlBeanFactory;
 
 /**
  * @author jinyoung.park89
- * @since 2016. 4. 21.
+ * @since 2016. 4. 24.
  */
 public class Step3Test {
 
     /**
-     * 본격적으로 7주차에 들어가기 전 잠시 쉬어가는(?) 곳입니다.
-     * 현재까지 우리 스터디에서 구현한 코드에서는 생성자-순환참조가 걸려있는 경우 StackOverflowError가 나게 됩니다.
-     * (아래의 test_생성자순환참조_StackOverflowError_에러가납니다() 테스트를 돌려보세요)
-     * 실수로 이런식의 참조 관계를 설정하는 경우(step3.xml 참고) Spring 에서는 개발자들에게 어떻게 경고해주고 있을까요?
+     * 이번 step 에서는 Bean Scope(singleton, prototype) 기능을 구현해보도록 하겠습니다.
+     * Bean Scope 에는 singleton, prototype, request, session, global session 등이 있지만 이번 step 에서는 singleton, prototype 만 다룹니다.
      *
-     * 이번 step의 목표는 순환참조가 걸린 경우 StackOverflowError가 아닌 사전에 정의된 'BeanCurrentlyInCreationException' 예외를 내려주는 것입니다.
-     * @see {http://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/beans/factory/BeanCurrentlyInCreationException.html}
+     * 현재까지 스터디에서 구현한 스프링 코드에서는 모든 bean을 singleton 으로 관리하고 있었습니다.
+     * 여기에 추가로 prototype scope를 구현해보도록 하겠습니다.
      *
      *
-     * 현재 문제는 Service1을 생성하는 도중 Service2를 생성하고, Service2를 생성하려면 Service3이 필요한데 Service3이 생성되려면 Service1이 필요한 구조입니다.(step3.xml 참고)
-     * Service1->Service2->Service3->Service1 (순환 참조, 환형 참조 라고 불립니다.)
+     * 1. XmlBeanDefinitionReader 클래스를 수정하여 bean element의 scope 프로퍼티 처리
+     *  => bean scope를 설정하는 방법은 xml 파일에서 <bean scope="prototype"></bean> or <bean scope="singleton"></bean> 와 같이 설정하는 것입니다.
+     *     일단 xml 파일을 읽어서 BeanDefinition을 만드는 XmlBeanDefinitionReader 클래스를 수정해야 합니다.
      *
-     * 문제 해결 방법은 다음과 같습니다.
-     * 1. bean을 직접적으로 생성하기 전(createBean() 호출하기 전)에 '생성중'이라고 마킹해놓습니다.
-     * 2. createBean()으로 bean 생성이 끝나면 '생성중' 마킹을 지웁니다.
-     * 3. 1번 이전에 bean이 '생성중'이라고 마킹되어 있는지 체크하고 '생성중'일 경우 BeanCurrentlyInCreationException 예외를 발생시킵니다.
+     * 2. 그리고 scope에 설정된 값에 따라서 (prototype or singleton) BeanDefinition 클래스의 scope 변수를 설정합니다.
      *
-     * 아래의 test_생성자순환참조() 테스트과 통과되도록 AbstractBeanFactory Class를 수정해보세요!!
+     * 3. AbstractBeanFactory 클래스에서 getBean 하는 부분 수정
+     *  => beanDefinition의 singleton 변수를 읽어서 singleton 일때 처리와 prototype 일때 처리를 나눠서 합니다.
      */
 
-    @Test
-    public void test_생성자순환참조_StackOverflowError_에러가납니다()
-            throws NoSuchMethodException, InvocationTargetException {
-        XmlBeanFactory beanFactory = new XmlBeanFactory(ClassLoader.getSystemResourceAsStream("step3.xml"));
+    private BeanFactory beanFactory;
+
+    @Before
+    public void setUp() {
+        beanFactory = new XmlBeanFactory(ClassLoader.getSystemResourceAsStream("step3.xml"));
     }
 
-    @Test(expected = BeanCurrentlyInCreationException.class)
-    public void test_생성자순환참조() throws NoSuchMethodException, InvocationTargetException {
-        test_생성자순환참조_StackOverflowError_에러가납니다();
+    /**
+     * 동일한 bean 을 두 번 가져와 동일한지 비교하는 테스트 코드입니다. 스프링에서는 scope에 관한 다른 설정을 하지 않은 경우 singleton으로 관리하기 때문에
+     * 아래 테스트는 통과되어야 합니다.(따로 구현하지 않아도 테스트는 통과됩니다.)
+     */
+    @Test
+    public void test_singleton() {
+        Yoonsung yoonsung1 = this.beanFactory.getBean("yoonsung", Yoonsung.class);
+        Yoonsung yoonsung2 = this.beanFactory.getBean("yoonsung", Yoonsung.class);
+
+        assertEquals(yoonsung1, yoonsung2);
+    }
+
+    /**
+     * arahansa bean은 scope="prototype"으로 설정된 bean 입니다. 따라서 동일한 bean name으로 두 번 가져올 경우 각각 다른 객체여야 합니다.
+     */
+    @Test
+    public void test_prototype() {
+        Arahansa arahansa1 = this.beanFactory.getBean("arahansa", Arahansa.class);
+        Arahansa arahansa2 = this.beanFactory.getBean("arahansa", Arahansa.class);
+
+        assertNotEquals(arahansa1, arahansa2);
     }
 }

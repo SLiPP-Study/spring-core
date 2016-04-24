@@ -1,14 +1,13 @@
 package beans.factory.support;
 
-import beans.factory.BeanFactory;
-import beans.factory.config.BeanDefinition;
-import beans.factory.ListableBeanFactory;
-
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
+import beans.factory.BeanFactory;
+import beans.factory.ListableBeanFactory;
+import beans.factory.config.BeanDefinition;
 
 public class DefaultListableBeanFactory extends AbstractBeanFactory
         implements BeanDefinitionRegistry, ListableBeanFactory {
@@ -36,6 +35,10 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory
     }
 
     protected void preInstantiate() {
+
+        // 4. postProcessBeforeInitialization methods of BeanPostProcessors
+        // Todo: BeanPostProcessor 인터페이스를 구현한 클래스를 등록한다. (PrintSpringCoreMemberProcessor)
+
         String[] beanNames = getBeanDefinitionNames();
         for (int i = 0; i < getBeanDefinitionCount(); i++) {
             getBean(beanNames[i]);

@@ -100,7 +100,7 @@ public class Step2Test {
     @Test
     public void test_PostProcessorBeforeInitialization() {
         // SpringCoreMember 인터페이스를 상속한 빈들의 경우 초기화 전,후로 bean 이름을 출력하게끔 하는 PrintSpringCoreMemberProcessor 클래스를 만들어놓았습니다.
-        // AbstractBeanFactory 클래스의 beanPostProcessors 변수에 PrintSpringCoreMemberProcessor 클래스를 추가하세요.
+        // AbstractBeanFactory 클래스의 beanPostProcessors 변수에 PrintSpringCoreMemberProcessor 클래스를 추가하세요. (DefaultListableBeanFactory 클래스 수정)
         // 그런 후에 AbstractBeanFactory 클래스의 callLifecycleMethodsIfNecessary 메소드를 적절히 수정한 후 테스트 클래스를 돌리면 SpringCoreMember 인터페이스를 구현한 클래스들이 출력될 겁니다.
     }
 

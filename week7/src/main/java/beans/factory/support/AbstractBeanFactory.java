@@ -95,7 +95,8 @@ public abstract class AbstractBeanFactory implements BeanFactory {
             }
 
             applyPropertyValues(beanDefinition, propertyValues, newlyCreatedBean, beanName);
-            newlyCreatedBean = callLifecycleMethodsIfNecessary(newlyCreatedBean, beanName);
+            newlyCreatedBean = callLifecycleMethodsIfNecessary(newlyCreatedBean, beanName);// Bean Life Cycle 처리 메소드 호출
+
             return newlyCreatedBean;
         } catch (InstantiationException e) {
             e.printStackTrace();
@@ -160,19 +161,23 @@ public abstract class AbstractBeanFactory implements BeanFactory {
         // 1. BeanNameAware's setBeanName
         // Todo: bean이 BeanNameAware 인터페이스를 구현한 경우 처리, beanName을 bean의 구현 메소드(setBeanName)에 넘겨준다.
 
-        //2. BeanFactoryAware's setBeanFactory
-        // Todo: bean이 BeanFactoryAware 인터페이스를 구현한 경우 처리, 현재 객체(this)를 bean의 구현 메소드(setBeanName)에 넘겨준다.
+        // 2. BeanFactoryAware's setBeanFactory
+        // Todo: bean이 BeanFactoryAware 인터페이스를 구현한 경우 처리, 현재 beanFactory(this)를 bean의 구현 메소드(setBeanName)에 넘겨준다.
 
-        //4. postProcessBeforeInitialization methods of BeanPostProcessors
-        // Todo: BeanPostProcessor 인터페이스를 구현한 클래스가 등록되어 있는 경우 처리
+        // 4. postProcessBeforeInitialization methods of BeanPostProcessors
+        // Todo: BeanPostProcessor 인터페이스를 구현한 클래스가 등록되어 있는 경우 처리 (postProcessorBeforeInitialization)
 
-        //5. InitializingBean's afterPropertiesSet
+        // 5. InitializingBean's afterPropertiesSet
         // Todo: bean이 InitializingBean 인터페이스를 구현한 경우 처리, bean의 구현 메소드(afterPropertiesSet)를 호출한다.
+
+        // 4. postProcessBeforeInitialization methods of BeanPostProcessors
+        // Todo: BeanPostProcessor 인터페이스를 구현한 클래스가 등록되어 있는 경우 처리 (postProcessorAfterInitialization)
 
         return bean;
     }
 
-    public void clearBeanHash() {
-        beanHash.clear();
+    public void destroyBean(String beanName, Object bean) {
+        // 6. DisposableBean's destroy
+        // Todo:  bean이 DisposableBean 인터페이스를 구현한 경우 처리
     }
 }

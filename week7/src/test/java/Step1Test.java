@@ -33,6 +33,6 @@ public class Step1Test {
 
     @Test(expected = BeanCurrentlyInCreationException.class)
     public void test_생성자순환참조() throws NoSuchMethodException, InvocationTargetException {
-        XmlBeanFactory beanFactory = new XmlBeanFactory(ClassLoader.getSystemResourceAsStream("step3.xml"));
+        XmlBeanFactory beanFactory = new XmlBeanFactory(ClassLoader.getSystemResourceAsStream("step1.xml"));
     }
 }

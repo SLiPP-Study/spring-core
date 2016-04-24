@@ -1,12 +1,13 @@
 package bean;
 
-import beans.factory.SpringCoreMemberAware;
+import beans.factory.DisposableBean;
 
-public class CoreTeam1 implements SpringCoreTeam, SpringCoreMemberAware {
+public class CoreTeam1 implements SpringCoreTeam, DisposableBean {
 
     private Javajigi javajigi;
 
-    private SpringCoreMember javajigi2;
+    public CoreTeam1() {
+    }
 
     public CoreTeam1(Javajigi javajigi) {
         this.javajigi = javajigi;
@@ -14,10 +15,6 @@ public class CoreTeam1 implements SpringCoreTeam, SpringCoreMemberAware {
 
     public Javajigi getJavajigi() {
         return javajigi;
-    }
-
-    public SpringCoreMember getJavajigi2() {
-        return javajigi2;
     }
 
     public int getMemberCount() {
@@ -29,7 +26,7 @@ public class CoreTeam1 implements SpringCoreTeam, SpringCoreMemberAware {
     }
 
     @Override
-    public void setSpringCoreMember(SpringCoreMember springCoreMember) {
-        this.javajigi2 = springCoreMember;
+    public void destroy() throws Exception {
+        this.javajigi = null;
     }
 }

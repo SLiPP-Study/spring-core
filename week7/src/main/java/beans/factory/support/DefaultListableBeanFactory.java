@@ -50,9 +50,4 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory
     public BeanDefinition getBeanDefinition(String key) {
         return beanDefinitionHash.get(key);
     }
-
-    public void clear() {
-        beanDefinitionHash.clear();
-        super.clearBeanHash();
-    }
 }

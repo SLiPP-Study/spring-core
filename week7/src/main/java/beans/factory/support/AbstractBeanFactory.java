@@ -2,8 +2,7 @@ package beans.factory.support;
 
 import beans.PropertyValue;
 import beans.PropertyValues;
-import beans.factory.BeanCurrentlyInCreationException;
-import beans.factory.BeanFactory;
+import beans.factory.*;
 import beans.factory.config.BeanDefinition;
 import beans.factory.config.BeanPostProcessor;
 import core.*;
@@ -164,25 +163,41 @@ public abstract class AbstractBeanFactory implements BeanFactory {
 
         // 1. BeanNameAware's setBeanName
         // Todo: bean이 BeanNameAware 인터페이스를 구현한 경우 처리, beanName을 bean의 구현 메소드(setBeanName)에 넘겨준다.
+        if (bean instanceof BeanNameAware) {
+            ((BeanNameAware)bean).setBeanName(beanName);
+        }
 
         // 2. BeanFactoryAware's setBeanFactory
         // Todo: bean이 BeanFactoryAware 인터페이스를 구현한 경우 처리, 현재 beanFactory(this)를 bean의 구현 메소드(setBeanName)에 넘겨준다.
+        if (bean instanceof BeanFactoryAware) {
+            ((BeanFactoryAware)bean).setBeanFactory(this);
+        }
 
         // 4. postProcessBeforeInitialization methods of BeanPostProcessors
         // Todo: BeanPostProcessor 인터페이스를 구현한 클래스가 등록되어 있는 경우 처리 (postProcessorBeforeInitialization)
+        this.beanPostProcessors.forEach(
+            beanPostProcessor -> beanPostProcessor.postProcessorBeforeInitialization(bean, beanName));
 
         // 5. InitializingBean's afterPropertiesSet
         // Todo: bean이 InitializingBean 인터페이스를 구현한 경우 처리, bean의 구현 메소드(afterPropertiesSet)를 호출한다.
+        if (bean instanceof InitializingBean) {
+            ((InitializingBean)bean).afterPropertiesSet();
+        }
 
         // 4. postProcessBeforeInitialization methods of BeanPostProcessors
         // Todo: BeanPostProcessor 인터페이스를 구현한 클래스가 등록되어 있는 경우 처리 (postProcessorAfterInitialization)
+        this.beanPostProcessors.forEach(
+            beanPostProcessor -> beanPostProcessor.postProcessorAfterInitialization(bean, beanName));
 
         return bean;
     }
 
-    public void destroyBean(String beanName, Object bean) {
+    public void destroyBean(String beanName, Object bean) throws Exception {
         // 6. DisposableBean's destroy
         // Todo:  bean이 DisposableBean 인터페이스를 구현한 경우 처리
+        if (bean instanceof DisposableBean) {
+            ((DisposableBean)bean).destroy();
+        }
     }
 
     public void addBeanPostProcessor(BeanPostProcessor beanPostProcessor) {

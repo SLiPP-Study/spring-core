@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import beans.PrintSpringCoreMemberProcessor;
 import beans.factory.BeanFactory;
 import beans.factory.ListableBeanFactory;
 import beans.factory.config.BeanDefinition;
@@ -38,6 +39,7 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory
 
         // 4. postProcessBeforeInitialization methods of BeanPostProcessors
         // Todo: BeanPostProcessor 인터페이스를 구현한 클래스를 등록한다. (PrintSpringCoreMemberProcessor)
+        addBeanPostProcessor(new PrintSpringCoreMemberProcessor());
 
         String[] beanNames = getBeanDefinitionNames();
         for (int i = 0; i < getBeanDefinitionCount(); i++) {

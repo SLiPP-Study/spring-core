@@ -12,4 +12,5 @@
     </bean>
 
     <bean id="woojin" class="bean.Woojin"></bean>
+    <bean id="yoonsung" class="bean.Yoonsung"></bean>
 </beans>

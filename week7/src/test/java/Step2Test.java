@@ -101,7 +101,7 @@ public class Step2Test {
     public void test_PostProcessorBeforeInitialization() {
         // SpringCoreMember 인터페이스를 상속한 빈들의 경우 초기화 전,후로 bean 이름을 출력하게끔 하는 PrintSpringCoreMemberProcessor 클래스를 만들어놓았습니다.
         // AbstractBeanFactory 클래스의 beanPostProcessors 변수에 PrintSpringCoreMemberProcessor 클래스를 추가하세요. (DefaultListableBeanFactory 클래스 수정)
-        // 그런 후에 AbstractBeanFactory 클래스의 callLifecycleMethodsIfNecessary 메소드를 적절히 수정한 후 테스트 클래스를 돌리면 SpringCoreMember 인터페이스를 구현한 클래스들이 출력될 겁니다.
+        // 그런 후에 AbstractBeanFactory 클래스의 callLifecycleMethodsIfNecessary 메소드를 적절히 수정한 후 테스트 클래스를 돌리면 SpringCoreMember 인터페이스를 구현한 클래스들이 출력될 겁니다. (콘솔창 확인)
     }
 
     //5. InitializingBean's afterPropertiesSet
@@ -119,7 +119,7 @@ public class Step2Test {
 
     // 6. DisposableBean's destroy
     @Test
-    public void test_DisposableBean() {
+    public void test_DisposableBean() throws Exception {
         // AbstractBeanFactory 클래스의 destroyBean 메소드를 적절히 수정합니다.
         // CoreTeam1 클래스는 DisposableBean 인터페이스를 구현합니다. 내부에 destroy 메소드를 갖고 있으며, CoreTeam1 클래스의 필드 멤버에 null 값으로 세팅해줍니다.
         CoreTeam1 coreTeam1 = this.beanFactory.getBean("coreTeam1", CoreTeam1.class);

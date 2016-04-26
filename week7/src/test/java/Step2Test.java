@@ -1,16 +1,15 @@
-import bean.*;
-import beans.factory.xml.XmlBeanFactory;
-import junit.framework.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.io.FileNotFoundException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Proxy;
-
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import bean.CoreTeam1;
+import bean.Jyp;
+import bean.Woniper;
+import bean.Woojin;
+import beans.factory.xml.XmlBeanFactory;
 
 /**
  * @author jinyoung.park89

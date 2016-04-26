@@ -18,8 +18,6 @@ import beans.factory.xml.XmlBeanFactory;
  */
 public class Step2Test {
 
-    private Logger log = Logger.getLogger("dd");
-
     /**
      * 이번 step에서는 Bean Life Cycle을 구현해보도록 하겠습니다.
      * 아래는 spring 1.0 버전에서 지원하는 Bean Life Cycle 목록입니다.

@@ -1,5 +1,6 @@
 import beans.factory.BeanCurrentlyInCreationException;
 import beans.factory.xml.XmlBeanFactory;
+import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -9,6 +10,8 @@ import java.lang.reflect.InvocationTargetException;
  * @since 2016. 4. 21.
  */
 public class Step1Test {
+
+    private Logger log = Logger.getLogger("dd");
 
     /**
      * 본격적으로 7주차에 들어가기 전 잠시 쉬어가는(?) 곳입니다.

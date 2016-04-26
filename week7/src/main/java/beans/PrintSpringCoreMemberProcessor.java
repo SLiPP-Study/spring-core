@@ -2,6 +2,7 @@ package beans;
 
 import bean.SpringCoreMember;
 import beans.factory.config.BeanPostProcessor;
+import org.apache.log4j.Logger;
 
 /**
  * @author jinyoung.park89
@@ -9,11 +10,13 @@ import beans.factory.config.BeanPostProcessor;
  */
 public class PrintSpringCoreMemberProcessor implements BeanPostProcessor {
 
+    private Logger log = org.apache.log4j.Logger.getLogger(this.getClass().getName());
+
     @Override
     public Object postProcessorBeforeInitialization(Object bean, String name) {
         // bean이 SpringCoreMember 를 구현했으면 bean 이름을 출력한다.
         if (bean instanceof SpringCoreMember) {
-            System.out.println("SpringCoreMember before instance,  name: " + name);
+            log.debug("SpringCoreMember before instance,  name: " + name);
         }
         return bean;
     }
@@ -22,7 +25,7 @@ public class PrintSpringCoreMemberProcessor implements BeanPostProcessor {
     public Object postProcessorAfterInitialization(Object bean, String name) {
         // bean이 SpringCoreMember 를 구현했으면 bean 이름을 출력한다.
         if (bean instanceof SpringCoreMember) {
-            System.out.println("SpringCoreMember after instance,  name: " + name);
+            log.debug("SpringCoreMember after instance,  name: " + name);
         }
         return bean;
     }

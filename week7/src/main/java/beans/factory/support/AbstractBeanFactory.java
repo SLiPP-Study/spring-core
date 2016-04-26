@@ -7,6 +7,7 @@ import beans.factory.BeanFactory;
 import beans.factory.config.BeanDefinition;
 import beans.factory.config.BeanPostProcessor;
 import core.*;
+import org.apache.log4j.Logger;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -23,6 +24,7 @@ public abstract class AbstractBeanFactory implements BeanFactory {
     private static final Object CURRENTLY_IN_CREATION = new Object();
     private final BeanFactory parentBeanFactory;
     private final List<BeanPostProcessor> beanPostProcessors = new ArrayList<>();
+    private Logger log = Logger.getLogger(this.getClass().getName());
     /**
      * Map of Bean objects, keyed by id attribute
      */
@@ -52,11 +54,15 @@ public abstract class AbstractBeanFactory implements BeanFactory {
             if (object == CURRENTLY_IN_CREATION) {
                 throw new BeanCurrentlyInCreationException("current bean name: " + name);
             }
+            if (log.isDebugEnabled()) {
+                log.debug("returning cached object: " + name);
+            }
             return object;
         } else {
             BeanDefinition beanDefinition = getBeanDefinition(name);
             if (beanDefinition != null) {
                 this.beanHash.put(name, CURRENTLY_IN_CREATION);
+                log.debug("creating instance: " + name);
                 Object newlyCreatedBean = createBean(beanDefinition, name);
                 beanHash.put(name, newlyCreatedBean);
                 return newlyCreatedBean;

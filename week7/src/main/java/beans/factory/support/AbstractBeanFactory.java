@@ -172,7 +172,7 @@ public abstract class AbstractBeanFactory implements BeanFactory {
         // Todo: bean이 BeanNameAware 인터페이스를 구현한 경우 처리, beanName을 bean의 구현 메소드(setBeanName)에 넘겨준다.
 
         // 2. BeanFactoryAware's setBeanFactory
-        // Todo: bean이 BeanFactoryAware 인터페이스를 구현한 경우 처리, 현재 beanFactory(this)를 bean의 구현 메소드(setBeanName)에 넘겨준다.
+        // Todo: bean이 BeanFactoryAware 인터페이스를 구현한 경우 처리, 현재 beanFactory(this)를 bean의 구현 메소드(setBeanFactory)에 넘겨준다.
 
         // 4. postProcessBeforeInitialization methods of BeanPostProcessors
         // Todo: BeanPostProcessor 인터페이스를 구현한 클래스가 등록되어 있는 경우 처리 (postProcessorBeforeInitialization)

@@ -7,6 +7,7 @@ import beans.factory.BeanFactory;
 import beans.factory.config.BeanDefinition;
 import beans.factory.config.BeanPostProcessor;
 import core.*;
+import org.apache.log4j.Logger;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -23,6 +24,7 @@ public abstract class AbstractBeanFactory implements BeanFactory {
     private static final Object CURRENTLY_IN_CREATION = new Object();
     private final BeanFactory parentBeanFactory;
     private final List<BeanPostProcessor> beanPostProcessors = new ArrayList<>();
+    private Logger log = Logger.getLogger(this.getClass().getName());
     /**
      * Map of Bean objects, keyed by id attribute
      */
@@ -52,11 +54,15 @@ public abstract class AbstractBeanFactory implements BeanFactory {
             if (object == CURRENTLY_IN_CREATION) {
                 throw new BeanCurrentlyInCreationException("current bean name: " + name);
             }
+            if (log.isDebugEnabled()) {
+                log.debug("returning cached object: " + name);
+            }
             return object;
         } else {
             BeanDefinition beanDefinition = getBeanDefinition(name);
             if (beanDefinition != null) {
                 this.beanHash.put(name, CURRENTLY_IN_CREATION);
+                log.debug("creating instance: " + name);
                 Object newlyCreatedBean = createBean(beanDefinition, name);
                 beanHash.put(name, newlyCreatedBean);
                 return newlyCreatedBean;
@@ -166,7 +172,7 @@ public abstract class AbstractBeanFactory implements BeanFactory {
         // Todo: bean이 BeanNameAware 인터페이스를 구현한 경우 처리, beanName을 bean의 구현 메소드(setBeanName)에 넘겨준다.
 
         // 2. BeanFactoryAware's setBeanFactory
-        // Todo: bean이 BeanFactoryAware 인터페이스를 구현한 경우 처리, 현재 beanFactory(this)를 bean의 구현 메소드(setBeanName)에 넘겨준다.
+        // Todo: bean이 BeanFactoryAware 인터페이스를 구현한 경우 처리, 현재 beanFactory(this)를 bean의 구현 메소드(setBeanFactory)에 넘겨준다.
 
         // 4. postProcessBeforeInitialization methods of BeanPostProcessors
         // Todo: BeanPostProcessor 인터페이스를 구현한 클래스가 등록되어 있는 경우 처리 (postProcessorBeforeInitialization)

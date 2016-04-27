@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bones>
+<bean id="jenny" class="org.springframework.beans.TestBean">
+	<property name="name"><value>Jenny</value></property>
+	<property name="age"><value>30</value></property>
+	<property name="spouse"><ref local="david"/></property>
+</bean>
+<bean id="david" class="org.springframework.beans.TestBean">
+	<property name="name"><value>David</value></property>
+	<property name="age"><value>27</value></property>
+	<property name="spouse"><ref local="jenks"/></property>
+</bean>
+<bean id="jenks" class="org.springframework.beans.TestBean" singleton="false">
+	<property name="name"><value>Andrew</value></property>
+	<property name="age"><value>36</value></property>
+	<property name="spouse"><ref local="jenny"/></property>
+</bean>
+</bones>
